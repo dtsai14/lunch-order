@@ -1,0 +1,23 @@
+#container {
+    width: 800px;
+    height: 1000px;
+    background-color: wheat;
+    font-family: sans-serif;
+    margin: auto;
+    padding: 15px;
+    border-radius: 5px;
+
+    border: 2px dashed white
+}
+
+#header {
+
+}
+
+table{
+    table-layout: fixed;
+}
+
+table th, table td {
+    overflow: hidden;
+}
