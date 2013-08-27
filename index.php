@@ -10,7 +10,7 @@ include 'authenticate.php';
 
 <div class="container">
     <div class="page-header">
-        <h1>Good Morning, <?php echo $_SESSION['firstname'] ?></h1>
+        <h1>Good Morning, <?php echo $_SESSION['firstname'] ?>!</h1>
     </div>
 
     <nav class="navbar navbar-default" role="navigation">
@@ -89,6 +89,48 @@ include 'authenticate.php';
     </table>
 
     <a class="btn btn-default" href="addrestaurant.php">Add Restaurant</a>
+
+    <!-- Button trigger modal -->
+    <a data-toggle="modal" href="#add_restaurant" class="btn btn-primary btn-sm">Add Restaurant</a>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add_restaurant" tabindex="-1" role="dialog" aria-labelledby="addRestaurant" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add Restaurant</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="restaurant" action="insertRestaurant.php" method="post" enctype="multipart/form-data">
+                        <fieldset>
+                            <div class="form-group">
+                                <label for="restaurantName">Restaurant Name</label>
+                                <input type="text" class="form-control" id="restaurantName" name="restaurantName" placeholder="Restaurant Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="restaurantType">Restaurant Type</label>
+                                <input type="text" class="form-control" id="restaurantType" name="restaurantType" placeholder="Restaurant Type" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="menuInput">Menu</label>
+
+                                <input type="file" name="menuInputFile" id="menuInputFile">
+                                <br>Or enter URL:<br>
+                                <input type="url" name="menuInputURL" id="menuInputURL">
+                            </div>
+                        </fieldset>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <br><br><br>
 </div>
 
@@ -104,5 +146,44 @@ include 'authenticate.php';
             }
         })
     }
+
+    $("form#restaurant").submit(function(){
+        var formData = new FormData($(this)[0]);
+        $.ajax({
+            url: "insertRestaurant.php",
+            type: 'POST',
+            data: formData,
+            async: false,
+            success: function() {
+                $('#add_restaurant').modal('hide');
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+        return false;
+    });
+
+    function afterThePageLoads(){
+        var menuInputFile = $("#menuInputFile");
+        var menuInputURL = $("#menuInputURL");
+        menuInputFile.change(function(){
+            if(menuInputFile.val()== "") {
+                menuInputURL.attr('disabled', false);
+            } else {
+                menuInputURL.attr('disabled', true);
+            }
+        })
+        menuInputURL.change(function(){
+            if(menuInputURL.val()== "") {
+                menuInputFile.attr('disabled', false);
+            } else {
+                menuInputFile.attr('disabled', true);
+            }
+        })
+    }
+
+    $(afterThePageLoads);
+
 </script>
 </body>

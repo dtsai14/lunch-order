@@ -1,4 +1,6 @@
 <?php
+
+// Don't need this anymore because add restaurant functionality has been added to modal in index.php
 include 'authenticate.php';
 ?>
 <!DOCTYPE html>

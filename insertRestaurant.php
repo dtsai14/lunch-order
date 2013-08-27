@@ -1,14 +1,5 @@
 <?php
 include 'authenticate.php';
-?>
-<!DOCTYPE html>
-<head lang="en">
-    <?php
-    include 'bootstrapSources.php';
-    ?>
-</head>
-<body>
-<?php
 include 'mysql.php';
 
 $name = $_POST['restaurantName'];
@@ -30,20 +21,8 @@ if ($_POST['menuInputURL']) {
 try {
     $statement = $pdo->prepare("INSERT INTO restaurants (name,food_type,menu_url) VALUES (?,?,?)");
     $statement->execute(array($name, $type, $url));
-
-?>
-<div class="jumbotron">
-    <h1>Restaurant Added</h1>
-    <p>Return to the homepage or add more restaurants</p>
-    <p><a class="btn btn-primary btn-lg" href="addrestaurant.php">Add another restaurant</a>
-        <a class="btn btn-primary btn-lg" href="index.php">Return to Homepage</a></p>
-</div>
-<?php
-} catch (PDOException $exception){
-    echo "PDO error :" . $exception->getMessage();
+} catch (PDOException $e){
+    $error = "PDO error :" . $e->getMessage() . "<br/>";
+    echo json_encode($error);
 }
 ?>
-
-
-
-</body>
