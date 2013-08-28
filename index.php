@@ -1,5 +1,6 @@
 <?php
 include 'authenticate.php';
+include 'mysql.php';
 ?>
 <!DOCTYPE html>
 <head lang="en">
@@ -43,52 +44,20 @@ include 'authenticate.php';
         </thead>
         <tbody>
 
-        <?php
-
-        include 'mysql.php';
-
-        try {
-            $restaurants = $pdo->query("SELECT * FROM restaurants ORDER BY name");
-
-            foreach ($restaurants->fetchAll() as $row) {
-                echo "<tr id=" . $row['id'] . ">";
-                echo "<td> <button id='delete' class=\"btn btn-danger btn-xs\" onclick=\"deleteItem(" . $row['id'] . ")\"><span class=\"glyphicon glyphicon-remove\"></span></button></td>";
-                echo "<td>" . $row['name'] . "</td>";
-                echo "<td>" . $row['food_type'] . "</td>";
-                echo "<td>" . ($row['menu_url'] ? "<button class=\"btn btn-info btn-xs\" onClick=\"window.open('" . $row['menu_url'] . "')\">View Menu</button>" :
-                          "<!-- Button trigger modal -->
-                          <a data-toggle=\"modal\" href=\"#myModal\" class=\"btn btn-default btn-xs\">Add Menu</a>
-
-                          <!-- Modal -->
-                          <div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">
-                            <div class=\"modal-dialog\">
-                              <div class=\"modal-content\">
-                                <div class=\"modal-header\">
-                                  <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
-                                  <h4 class=\"modal-title\">Modal title</h4>
-                                </div>
-                                <div class=\"modal-body\">
-                                  ...
-                                </div>
-                                <div class=\"modal-footer\">
-                                  <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-                                  <button type=\"button\" class=\"btn btn-primary\">Save changes</button>
-                                </div>
-                              </div><!-- /.modal-content -->
-                            </div><!-- /.modal-dialog -->
-                          </div><!-- /.modal -->") .
-                        " <button class=\"btn btn-success btn-xs\">Take Orders</button>" . "</td>";
-                echo "</tr>";
-            }
-        } catch (PDOException $e) {
-            print "Error!: " . $e->getMessage() . "<br/>";
-            die();
-        }
-        ?>
+        <?php foreach (getRestaurants() as $restaurant) { ?>
+            <tr id="<?= $restaurant['id'] ?>">
+            <td><button data-restaurant-id="<?= $restaurant['id']?>" class="delete-button btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span></button></td>
+            <td><?= $restaurant['name'] ?></td>
+            <td><?= $restaurant['food_type']?></td>
+            <td class="restaurant-actions" data-menu-url="<?= $restaurant['menu_url'] ?>">
+                <button class="view-menu-button btn btn-info btn-xs" data-menu-url="<?=  $restaurant['menu_url']?>">View Menu</button>
+                <button class="add-menu-button btn btn-default btn-xs" data-restaurant-id="<?= $restaurant['id']?>">Add Menu</button>
+                <button class="take-orders-button btn btn-success btn-xs">Take Orders</button>
+            </td>
+            </tr>
+        <?php } ?>
         </tbody>
     </table>
-
-    <a class="btn btn-default" href="addrestaurant.php">Add Restaurant</a>
 
     <!-- Button trigger modal -->
     <a data-toggle="modal" href="#add_restaurant" class="btn btn-primary btn-sm">Add Restaurant</a>
@@ -102,7 +71,7 @@ include 'authenticate.php';
                     <h4 class="modal-title">Add Restaurant</h4>
                 </div>
                 <div class="modal-body">
-                    <form role="form" id="restaurant" action="insertRestaurant.php" method="post" enctype="multipart/form-data">
+                    <form role="form" id="restaurant" enctype="multipart/form-data">
                         <fieldset>
                             <div class="form-group">
                                 <label for="restaurantName">Restaurant Name</label>
@@ -114,7 +83,6 @@ include 'authenticate.php';
                             </div>
                             <div class="form-group">
                                 <label for="menuInput">Menu</label>
-
                                 <input type="file" name="menuInputFile" id="menuInputFile">
                                 <br>Or enter URL:<br>
                                 <input type="url" name="menuInputURL" id="menuInputURL">
@@ -134,56 +102,8 @@ include 'authenticate.php';
     <br><br><br>
 </div>
 
-<script type="text/javascript">
-    function deleteItem(restaurant_id) {
-        $("#" + restaurant_id).hide();
-        $.ajax({
-            type: "POST",
-            url: "deleteRestaurant.php",
-            data: {'restaurant_id' : restaurant_id},
-            success: function(data) {
-                console.log("SUCCESS!");
-            }
-        })
-    }
 
-    $("form#restaurant").submit(function(){
-        var formData = new FormData($(this)[0]);
-        $.ajax({
-            url: "insertRestaurant.php",
-            type: 'POST',
-            data: formData,
-            async: false,
-            success: function() {
-                $('#add_restaurant').modal('hide');
-            },
-            cache: false,
-            contentType: false,
-            processData: false
-        });
-        return false;
-    });
-
-    function afterThePageLoads(){
-        var menuInputFile = $("#menuInputFile");
-        var menuInputURL = $("#menuInputURL");
-        menuInputFile.change(function(){
-            if(menuInputFile.val()== "") {
-                menuInputURL.attr('disabled', false);
-            } else {
-                menuInputURL.attr('disabled', true);
-            }
-        })
-        menuInputURL.change(function(){
-            if(menuInputURL.val()== "") {
-                menuInputFile.attr('disabled', false);
-            } else {
-                menuInputFile.attr('disabled', true);
-            }
-        })
-    }
-
-    $(afterThePageLoads);
-
-</script>
+<?php include "menuModal.php";
+?>
+<script type="text/javascript" src="index.js"></script>
 </body>
