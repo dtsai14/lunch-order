@@ -14,21 +14,6 @@ include 'mysql.php';
 <body>
 <?php
 date_default_timezone_set('America/Los_Angeles');
-
-//store all restaurant names alphabetically in an array $restaurantNames
-/*try {
-    $pdo = new PDO('mysql:host=localhost;dbname=lunch_master', 'root', '', array(PDO::ATTR_PERSISTENT => false));
-    $stmt = $pdo->prepare("SELECT * FROM restaurants ORDER BY name");
-    $stmt->execute();
-
-    $restaurantNames = array();
-    while ($rs = $stmt->fetch(PDO::FETCH_OBJ)) {
-        $restaurantNames [] = $rs->name;
-    }
-} catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
-    die();
-}*/
 ?>
 
 <div class="container">
@@ -56,77 +41,65 @@ date_default_timezone_set('America/Los_Angeles');
         <!-- /.navbar-collapse -->
     </nav>
 
-    <h3>Which restaurant would you like the office to order from today?</h3>
-    <form id="voting_form" role="form">
-        <table id="voting" class="table table-bordered table-hover table-striped">
-            <thead>
-            <tr>
-                <th style="width: 5%">Vote</th>
-                <th style="width: 20%">Restaurant Name</th>
-                <th>Current Votes</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <?php foreach (getRestaurants() as $restaurant) { ?>
+    <div id="voting_container">
+        <h3>Which restaurant would you like the office to order from today?</h3>
+        <form id="voting_form" role="form">
+            <table id="voting" class="table table-bordered table-hover table-striped">
+                <thead>
                 <tr>
-                <td>
-                    <div class='radio'>
-                        <input type='radio' name='vote' id="<?= $restaurant['id'] ?>" value="<?= $restaurant['id'] ?>" required>
-                </td>
-                <td>
-                    <span onClick='window.open("<?= $restaurant['menu_url'] ?>")'> <?= $restaurant['name'] ?> </span>
-                </td>
-                <td>
-                    <div class='progress progress-striped'>
-                        <div class='progress-bar progress-bar-info' role='progressbar' aria-valuenow='10' aria-valuemin='0' aria-valuemax='16' style='width: 10%'></div>
-                        <span class='badge'>42</span>
-                    </div>
-                </td>
+                    <th style="width: 5%">Vote</th>
+                    <th style="width: 20%">Restaurant Name</th>
+                    <th>Current Votes</th>
                 </tr>
-            <?php } ?>
-            </tbody>
-        </table>
-        <button id="send_vote" type="submit" class="btn btn-default">Vote</button>
-        <span id="vote_alert"></span>
-    </form>
+                </thead>
+                <tbody>
 
-    <div class="orderForm"></div>
-    <div id="restaurantOfDay">
-        <h2>Today's menu is from <h2>
+                <?php foreach (getRestaurants() as $restaurant) {
+                    $numVotes = getNumVotes($restaurant['id']);
+                    $numUsers = getNumUsers();
+                    $voteBar = $numVotes / $numUsers * 100;
+                    ?>
+                    <tr>
+                        <td><div class='radio'><input type='radio' name='vote' id="<?= $restaurant['id'] ?>" value="<?= $restaurant['id'] ?>" required></td>
+                        <td><a href="<?= $restaurant['menu_url'] ?>" target="_blank"> <?= $restaurant['name'] ?> </a></td>
+                        <td><div><span class='badge pull-left'><?= $numVotes ?></span><div class='progress progress-striped'><div class='progress-bar progress-bar-info' role='progressbar'aria-valuenow="<?= $numVotes ?>"aria-valuemin='0' aria-valuemax='16' style='width: <?= $voteBar ?>%'></div></div></div></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+            <button id="send_vote" type="submit" class="btn btn-default">Vote</button>
+            <span id="vote_alert"></span>
+        </form>
     </div>
 
-    <form role="form">
-        <div class="form-group">
-            <label for="restaurant">Restaurant</label>
-            <input type="text" class="form-control" id="restaurant" placeholder="Enter Restaurant">
+    <div id="ordering_container">
+        <!--<div class="alert alert-dismissable alert-info">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Voting has closed for today!</strong> Please vote again tomorrow :)
+        </div> -->
+        <div id="restaurantOfDay">
+            <h2>Today's menu is from </h2>
         </div>
-        <div class="form-group">
-            <label for="order">Order</label>
-            <textarea name="order" class="form-control" id="order" maxlength="1000" cols="20" rows="6" required></textarea>
-        </div>
-        <button id="send_order" class="btn btn-default">Submit</button>
-    </form>
 
-    <h2>Orders <span class="pull-right"><small><?php echo date('l, F d, Y')?></small></span></h2>
-    <div id="flash"></div>
-<?php
-/*$statement = $pdo->prepare("SELECT * FROM orders WHERE date(creation_date) = curdate() ORDER BY creation_date DESC");
-$statement->execute();
+        <form role="form">
+            <div class="form-group">
+                <label for="restaurant">Restaurant</label>
+                <input type="text" class="form-control" id="restaurant" placeholder="Enter Restaurant">
+            </div>
+            <div class="form-group">
+                <label for="order">Order</label>
+                <textarea name="order" class="form-control" id="order" maxlength="1000" cols="20" rows="6"
+                          required></textarea>
+            </div>
+            <button id="send_order" class="btn btn-default">Submit</button>
+        </form>
 
-foreach ($statement->fetchAll() as $row) {
-    echo "<div class='panel panel-default'>
-      <div class='panel-heading'>
+        <h2>Orders <span class="pull-right"><small><?php echo date('l, F d, Y') ?></small></span></h2>
+        <div id="flash"></div>
+    </div>
 
-        <h3 class='panel-title'>" . $row['user_id'] . "<span class='badge pull-right'>" . date("g:i a, l, F d, Y", strtotime($row['creation_date'])) . "</span></h3>
-      </div>
-      <div class='panel-body'>" .
-        $row['text']
-        ."</div>
-    </div>";
-}*/
-?>
-
+ <!--   <button type="button" id="voting-button" class="btn btn-primary">Voting</button>
+    <button type="button" id="ordering-button" class="btn btn-primary">Ordering</button> -->
 </div>
 
 <script type="text/javascript" src="lunchorder.js"></script>
