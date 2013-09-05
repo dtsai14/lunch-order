@@ -5,25 +5,18 @@ include 'redirectHome.php';
 <html>
 <head lang="en">
     <title>Registration</title>
-
-    <meta charset="utf-8">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js"></script>
-    <!-- Latest Glyphicons minified CSS -->
-    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css" rel="stylesheet">
-
+    <?php
+    include 'bootstrapSources.php';
+    ?>
 </head>
 <body>
-
     <div class="container">
         <div class="page-header">
             <h1>Welcome!  <small>Please create an account here.</small></h1>
             <br>
             If you already have an account, log in <a href="/lunchorder/login.php">here</a>.
         </div>
-        <form role="form" action="registerUser.php" method="post">
+        <form role="form" id="registration-form" action="registerUser.php" method="post">
             <fieldset>
                 <legend>Registration</legend>
                 <div class="form-group">
@@ -43,11 +36,11 @@ include 'redirectHome.php';
                     <label for="email">Email</label>
                     <input type="email" class="input-small" name="email" id="email" required>
                 </div>
-
                 <button type="submit" class="btn btn-default">Register!</button>
             </fieldset>
         </form>
+        <br>
+        <div id="alert"></div>
     </div>
-
-
+<script src="registration.js"></script>
 </body>

@@ -1,6 +1,6 @@
 <?php
-include 'authenticate.php';
-include 'mysql.php';
+include_once 'authenticate.php';
+include_once 'mysql.php';
 
 $name = $_POST['restaurantName'];
 $type = $_POST['restaurantType'];

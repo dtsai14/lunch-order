@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION['username'])) {
-    header("Location: lunchorder.php/");
+    header("Location: /lunchorder/lunchorder.php");
     exit;
 }
 ?>

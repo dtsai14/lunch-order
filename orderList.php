@@ -1,17 +1,18 @@
 <?php
-include 'authenticate.php';
-include 'mysql.php';
+include_once 'authenticate.php';
+include_once 'mysql.php';
 
-$statement = $pdo->prepare("SELECT orders.*, users.username FROM orders INNER JOIN users ON orders.user_id = users.id WHERE date(creation_date) = curdate() ORDER BY creation_date DESC");
-$statement->execute();
-
-$orders = array();
-foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $orders []= array('username' => $row['username'], 'text' => $row['text'], 'creation_time' => date("g:i a", strtotime($row['creation_date'])));
+$orderList = fetchOrderList();
+if (is_string($orderList)) {
+    echo $orderList;
+} else {
+    $htmlOrder = "";
+    foreach ($orderList as $order) {
+        $htmlOrder .= "<div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'>"
+            . $order['username'] . "'s order from " . $order['restaurant_name'] . "<span class='badge pull-right'>" . $order['creation_time']
+            . "</span></h3></div><div class='panel-body'>" . $order['text'] . "</div></div>";
+    }
+    echo $htmlOrder;
 }
 
-//print_r($orders);
-
-echo json_encode(array('orders'=>$orders));
-//echo '{"orders": []}';
 ?>

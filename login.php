@@ -16,7 +16,7 @@ include 'redirectHome.php';
         <br>
         If you don't have an account, register <a href="/lunchorder/registration.php">here</a>.
     </div>
-    <form role="form" action="loginUser.php" method="post">
+    <form role="form" id="login">
         <fieldset>
             <legend>Login</legend>
             <div class="form-group">
@@ -30,7 +30,8 @@ include 'redirectHome.php';
             <button type="submit" class="btn btn-default">Log In</button>
         </fieldset>
     </form>
+    <div id="alert"></div>
 </div>
 
-
+<script src="login.js"></script>
 </body>

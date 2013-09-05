@@ -1,15 +1,6 @@
 <?php
 include 'redirectHome.php';
-?>
 
-<!DOCTYPE html>
-<head lang="en">
-    <?php
-    include 'bootstrapSources.php';
-    ?>
-</head>
-<body>
-<?php
 $dbhost = 'localhost';
 $dbname = 'lunch_master';
 $dbuser = 'root';
@@ -26,18 +17,17 @@ $token = md5("$salt1$password$salt2");
 try {
     $statement = $pdo->prepare("SELECT * FROM users WHERE username='$username'");
     $statement->execute();
-    $result = $statement->fetch();
-    if ($result['password'] == $token) {
+    $user = $statement->fetch();
+    if ($user['password'] == $token) {
         $_SESSION['username'] = $username;
-        $_SESSION['firstname'] = $result['first_name'];
-        $_SESSION['userid'] = $result['id'];
-        die("<div class='alert alert-success'>Welcome, $_SESSION[firstname]! You are now logged in as $username. <a href='lunchorder.php' class='alert-link'>Continue to the main page.</a></div>");
-
+        $_SESSION['firstname'] = $user['first_name'];
+        $_SESSION['userid'] = $user['id'];
+        echo json_encode("");
     } else {
-        die("<div class='alert alert-warning'>Invalid username/password combination. Please <a href='registration.php' class='alert-link'>register</a> or try <a href='login.php' class='alert-link'>logging in</a> again</p>");
+        $result = json_encode("<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Invalid username/password combination. Please <a href='registration.php' class='alert-link'>register</a> or try logging in again</p>");
+        echo $result;
     }
 } catch (PDOException $exception) {
     echo "PDO error :" . $exception->getMessage();
 }
 ?>
-</body>
