@@ -7,7 +7,7 @@ include_once 'mysql.php';
 <html>
 <head lang="en">
     <title>Lunch Task Manager</title>
-    <?php include_once 'bootstrapSources.php';
+    <?php include_once 'sources.php';
     ?>
 </head>
 <body>
@@ -18,7 +18,6 @@ date_default_timezone_set('America/Los_Angeles');
 <div class="container">
     <?php include "header.php";
     ?>
-
     <div id="voting_container">
         <span id="vote_alert"></span>
         <h3>Which restaurant would you like the office to order from today?</h3>
@@ -31,7 +30,7 @@ date_default_timezone_set('America/Los_Angeles');
                     <th>Current Votes</th>
                 </tr>
                 </thead>
-                <tbody id="htmlTable">
+                <tbody id="vote-table">
                 </tbody>
             </table>
             <button id="send_vote" type="submit" class="btn btn-default">Vote</button>
@@ -50,13 +49,6 @@ date_default_timezone_set('America/Los_Angeles');
         </div>
 
         <br>
-        <!--<div id="restaurantOfDay">
-            <h2>Menu(s): </h2>
-            <h3><ul class="list-inline" id="restaurant-list">
-                    </ul>
-                </h3>
-        </div> -->
-        <br>
         <form role="form" id="order_form">
             <div class="form-group">
                 <label for="restaurant">Restaurant</label>
@@ -73,11 +65,67 @@ date_default_timezone_set('America/Los_Angeles');
 
         <br><br>
         <h2>Orders <span class="pull-right"><small><?= date('l, F d, Y') ?></small></span></h2>
-        <div id="flash"></div>
+        <div id="order-list"></div>
     </div>
 
 
 </div>
+
+<script id="vote-table-template" type="text/x-handlebars-template">
+    {{#restaurantVotes}}
+        <tr>
+            <td>
+                <div class='radio'>
+                    <input type='radio' name='vote' id='{{id}}' value='{{id}}' required>
+                </div>
+            </td>
+            <td>
+                <a href='{{menu_url}}' target='_blank'>{{name}}</a>
+            </td>
+            <td>
+                <div>
+                    <span class='badge pull-left'>{{num_votes}}</span>
+                    <div class='progress progress-striped'>
+                        <div class='progress-bar progress-bar-info' role='progressbar' aria-valuenow='{{num_votes}}' aria-valuemin='0' aria-valuemax='{{num_users}}' style='width:{{vote_bar}}%'></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {{/restaurantVotes}}
+</script>
+
+<script id="restaurant-dropdown-template" type="text/x-handlebars-template">
+    {{#activeRestaurants}}
+        <option value="{{id}}">{{name}}</option>
+    {{/activeRestaurants}}
+</script>
+
+<script id="restaurant-alerts-template" type="text/x-handlebars-template">
+    {{#activeRestaurants}}
+    <div class='alert alert-warning'>
+        <strong>{{username}}</strong> is currently taking orders for {{name}}.
+        {{#if menu_url}}
+            View menu <a href='{{menu_url}}' target='_blank' class='alert-link'>here</a>.
+        {{else}}
+            No menu has been uploaded; please see <strong>{{username}}</strong> for menu.
+        {{/if}}
+    </div>
+    {{/activeRestaurants}}
+</script>
+
+<script id="order-list-template" type="text/x-handlebars-template">
+    {{#orders}}
+       <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h3 class='panel-title'>{{username}}'s order from {{restaurant_name}}
+                    <span class='badge pull-right'>{{creation_time}}</span>
+                </h3>
+            </div>
+            <div class='panel-body'>{{text}}
+            </div>
+        </div>
+    {{/orders}}
+</script>
 
 <script src="lunchorder.js"></script>
 </body>

@@ -49,6 +49,7 @@ function takeOrder($restaurant_id) {
     try {
         $stmt = $pdo->prepare("INSERT INTO open_restaurants(restaurant_id,user_id) VALUES (?,?)");
         $stmt->execute(array($restaurant_id, $user_id));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         $error = "Error!: " . $e->getMessage() . "<br/>";
         return $error;
@@ -84,6 +85,18 @@ function deactivateRestaurant($restaurant_id) {
     try {
         $stmt = $pdo->prepare("UPDATE open_restaurants SET closing_time = NOW() WHERE date(opening_time) = curdate() AND restaurant_id = $restaurant_id AND closing_time IS NULL");
         $stmt->execute();
+    } catch (PDOException $e) {
+        $error = "Error!: " . $e->getMessage() . "<br/>";
+        return $error;
+    }
+}
+
+function getRestaurantsOpenedBy($user_id) {
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("SELECT DISTINCT restaurant_id, restaurants.name FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id WHERE date(opening_time) = curdate() AND user_id = $user_id AND closing_time IS NOT NULL");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         $error = "Error!: " . $e->getMessage() . "<br/>";
         return $error;

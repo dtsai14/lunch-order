@@ -6,7 +6,7 @@ include 'redirectHome.php';
 <head lang="en">
     <title>Registration</title>
     <?php
-    include 'bootstrapSources.php';
+    include 'sources.php';
     ?>
 </head>
 <body>

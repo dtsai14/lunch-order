@@ -7,7 +7,7 @@ include 'authenticate.php';
 <head lang="en">
     <meta charset="utf-8">
     <?php
-    include 'bootstrapSources.php';
+    include 'sources.php';
     ?>
     <script>
         function afterThePageLoads(){

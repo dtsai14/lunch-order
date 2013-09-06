@@ -4,10 +4,8 @@ include_once 'mysql.php';
 ?>
 <!DOCTYPE html>
 <head lang="en">
-    <?php include_once 'bootstrapSources.php';
+    <?php include_once 'sources.php';
     ?>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
 </head>
 <body>
 
@@ -30,7 +28,7 @@ include_once 'mysql.php';
     <!-- Button trigger modal -->
     <a data-toggle="modal" href="#add_restaurant" class="btn btn-primary btn-sm">Add Restaurant</a>
     <br><br>
-    <div class="panel-group" id="taken_orders"></div>
+    <div class="panel-group" id="taken-orders"></div>
     <br><br>
 </div>
 
@@ -60,6 +58,29 @@ include 'menuModal.php';
     {{/restaurants}}
 </script>
 
+<script id="taken-orders-template" type="text/x-handlebars-template">
+    <h3>Orders Taken By You Today</h3>
+    {{#takenOrders}}
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h4 class='panel-title'>
+                    <a class='accordion-toggle' data-toggle='collapse' data-parent='#accordion' href='#collapse{{id}}'>{{name}}
+                    </a>
+                </h4>
+            </div>
+            <div id='collapse{{id}}' class='panel-collapse collapse in'>
+                <div class='panel-body'>
+                    <dl class='dl-horizontal'>
+                        {{#orders}}
+                            <dt>{{first_name}} {{last_name}}</dt>
+                            <dd>{{text}}</dd>
+                        {{/orders}}
+                    </dl>
+                </div>
+            </div>
+        </div>
+    {{/takenOrders}}
+</script>
 
 <script src="index.js"></script>
 </body>
