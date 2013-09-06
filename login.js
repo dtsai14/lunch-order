@@ -9,7 +9,7 @@ function afterThePageLoads() {
                 data = JSON.parse(data);
                 console.log(data);
                 if (data == "") {
-                    window.location.href="/lunchorder/lunchorder.php";
+                    window.location.href="./lunchorder.php";
                 } else {
                     $('#alert').html(data);
                 }

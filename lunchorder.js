@@ -12,11 +12,11 @@ function afterThePageLoads() {
 
     setInterval(function () {
         checkSwap();
-    }, 10000);
+    }, 3000);
 
     $("#voting_form").submit(function () {
         $.ajax({
-            url: "sendVote.php",
+            url: "./sendVote.php",
             data: {'restaurant_id': $('input[name=vote]:checked').val()},
             type: "POST",
             success: function (data) {
@@ -40,6 +40,23 @@ function afterThePageLoads() {
         });
         return false;
     });
+
+    function alertOrdersClosed() {
+        $.ajax({
+            url: "./orderInProgress.php",
+            type: 'POST',
+            data: {'action': "get_closed_restaurants"},
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+                var source = $("#orders-closed-alert-template").html();
+                var template = Handlebars.compile(source);
+                var html= template(data);
+                $('#orders-closed-alert').html(html);
+                console.log("alert added");
+            }
+        })
+    }
 
     function refreshVotes() {
         $.ajax({
@@ -83,7 +100,7 @@ function afterThePageLoads() {
     function refreshActiveRestaurants() {
         var restaurantChoice = $('#restaurant-dropdown').val();
         $.ajax({
-            url: "/lunchorder/activeRestaurants.php",
+            url: "./activeRestaurants.php",
             success: function (data) {
                 data = JSON.parse(data);
                 if (!_.isEqual(data,activeRestaurantsData)) {
@@ -109,7 +126,7 @@ function afterThePageLoads() {
     // accesses database to update div with all current orders
     function refreshOrders() {
         $.ajax({
-            url: "/lunchorder/orderList.php",
+            url: "./orderList.php",
             success: function (data) {
                 data = JSON.parse(data);
                 console.log(data);
@@ -132,7 +149,7 @@ function afterThePageLoads() {
 
     function checkSwap() {
         $.ajax({
-            url: "/lunchorder/orderInProgress.php",
+            url: "./orderInProgress.php",
             type: 'POST',
             data: {'action': "get_active_restaurants"},
             success: function(data) {
@@ -152,16 +169,17 @@ function afterThePageLoads() {
                         intervalId = setInterval(function () {
                             refreshActiveRestaurants();
                             refreshOrders();
-                        }, 5000);
+                        }, 3000);
                     } else {
                         console.log("changed to voting!");
+                        alertOrdersClosed();
                         refreshVotes();
                         $('#voting_container').show();
                         $('#ordering_container').hide();
 
                         intervalId = setInterval(function () {
                             refreshVotes();
-                        }, 5000);
+                        }, 3000);
                     }
                 }
             },

@@ -11,8 +11,8 @@
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav nav-pills">
-            <li id="lunchorder"><a href="/lunchorder/lunchorder.php">Lunch Order</a></li>
-            <li id="admin"><a href="/lunchorder/index.php">Admin Page</a></li>
+            <li id="lunchorder"><a href="./lunchorder.php">Lunch Order</a></li>
+            <li id="admin"><a href="./index.php">Admin Page</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">

@@ -34,7 +34,7 @@ function afterThePageLoads() {
     function refreshTable() {
         console.log("checking for updates...");
         $.ajax({
-            url: "/lunchorder/adminTable.php",
+            url: "./adminTable.php",
             success: function(data) {
                 data = JSON.parse(data);
                 if (!_.isEqual(data,adminTableData)){

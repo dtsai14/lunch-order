@@ -14,7 +14,7 @@ include 'redirectHome.php';
         <div class="page-header">
             <h1>Welcome!  <small>Please create an account here.</small></h1>
             <br>
-            If you already have an account, log in <a href="/lunchorder/login.php">here</a>.
+            If you already have an account, log in <a href="./login.php">here</a>.
         </div>
         <form role="form" id="registration-form" action="registerUser.php" method="post">
             <fieldset>

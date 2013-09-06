@@ -11,9 +11,9 @@ if ($_POST['menuInputURL']) {
 } else if ($_FILES['menuInputFile']['name']) {
     print_r($_FILES['menuInputFile']);
     $ext = pathinfo($_FILES['menuInputFile']['name'], PATHINFO_EXTENSION);
-    $fileName = "C:\wamp\www\lunchorder\Menus\\$name"."_menu.$ext";
+    $fileName = "./Menus/$name"."_menu.$ext";
     move_uploaded_file($_FILES['menuInputFile']["tmp_name"], $fileName);
-    $url = "/lunchorder/Menus/$name"."_menu.$ext";
+    $url = "./Menus/$name"."_menu.$ext";
 } else {
     $url = "";
 }

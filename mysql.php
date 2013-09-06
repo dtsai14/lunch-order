@@ -56,6 +56,23 @@ function takeOrder($restaurant_id) {
     }
 }
 
+function sendEmail($restaurant_id) {
+    global $pdo;
+    $user_id = $_SESSION['userid'];
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM users");
+        $stmt->execute;
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($users as $user) {
+            $email = $user['email'];
+            mail($email, 'Orders open', 'Please visit the LunchMaster website to place your order!');
+        }
+    } catch (PDOException $e) {
+        $error = "Error!: " . $e->getMessage() . "<br/>";
+        return $error;
+    }
+}
+
 function getActiveRestaurants() {
     global $pdo;
     try {
@@ -85,6 +102,18 @@ function deactivateRestaurant($restaurant_id) {
     try {
         $stmt = $pdo->prepare("UPDATE open_restaurants SET closing_time = NOW() WHERE date(opening_time) = curdate() AND restaurant_id = $restaurant_id AND closing_time IS NULL");
         $stmt->execute();
+    } catch (PDOException $e) {
+        $error = "Error!: " . $e->getMessage() . "<br/>";
+        return $error;
+    }
+}
+
+function getClosedRestaurants() {
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("SELECT DISTINCT restaurant_id, restaurants.name FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id WHERE date(opening_time) = curdate() AND closing_time IS NOT NULL");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         $error = "Error!: " . $e->getMessage() . "<br/>";
         return $error;

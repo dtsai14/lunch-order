@@ -10,9 +10,9 @@ if ($_POST['menuInputURL'] || $_FILES['menuInputFile']['name'] ){
         $restaurant = $pdo->query("SELECT * FROM restaurants WHERE id= $restaurant_id");
         $name = $restaurant->fetch()['name'];
         $ext = pathinfo($_FILES['menuInputFile']['name'], PATHINFO_EXTENSION);
-        $fileName = "C:\wamp\www\lunchorder\Menus\\$name" . "_menu.$ext";
+        $fileName = "./Menus/$name" . "_menu.$ext";
         move_uploaded_file($_FILES['menuInputFile']["tmp_name"], $fileName);
-        $url = "/lunchorder/Menus/$name" . "_menu.$ext";
+        $url = "./Menus/$name" . "_menu.$ext";
     };
 
     try {

@@ -18,6 +18,7 @@ date_default_timezone_set('America/Los_Angeles');
 <div class="container">
     <?php include "header.php";
     ?>
+    <div id="orders-closed-alert"></div>
     <div id="voting_container">
         <span id="vote_alert"></span>
         <h3>Which restaurant would you like the office to order from today?</h3>
@@ -125,6 +126,18 @@ date_default_timezone_set('America/Los_Angeles');
             </div>
         </div>
     {{/orders}}
+</script>
+
+<script id="orders-closed-alert-template" type="text/x-handlebars-template">
+    <div class='alert alert-danger'>
+        Orders have already been taken and closed today for:
+        <ul>
+        {{#each closedRestaurants}}
+            <li>{{this}}</li>
+        {{/each}}
+        </ul>
+        Please check with your admin to see if orders will be opened again today.
+    </div>
 </script>
 
 <script src="lunchorder.js"></script>

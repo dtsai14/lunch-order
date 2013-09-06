@@ -14,7 +14,7 @@ include 'redirectHome.php';
     <div class="page-header">
         <h1>Welcome!  <small>Please sign in here.</small></h1>
         <br>
-        If you don't have an account, register <a href="/lunchorder/registration.php">here</a>.
+        If you don't have an account, register <a href="./registration.php">here</a>.
     </div>
     <form role="form" id="login">
         <fieldset>
@@ -30,6 +30,7 @@ include 'redirectHome.php';
             <button type="submit" class="btn btn-default">Log In</button>
         </fieldset>
     </form>
+    <br>
     <div id="alert"></div>
 </div>
 

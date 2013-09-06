@@ -27,7 +27,7 @@ try {
         $alert = '<div class="alert alert-dismissable alert-success">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             Welcome! You have been added to the list of registered users in the PaperG lunch ordering system.
-            Visit the <a href="/lunchorder/lunchorder.php" class="alert-link">LunchMaster homepage</a> to vote on the restaurant of the day or place your order.</div>';
+            Visit the <a href="./lunchorder.php" class="alert-link">LunchMaster homepage</a> to vote on the restaurant of the day or place your order.</div>';
         echo json_encode($alert);
     }
 } catch (PDOException $exception) {
