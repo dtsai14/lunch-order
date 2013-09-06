@@ -140,6 +140,6 @@ date_default_timezone_set('America/Los_Angeles');
     </div>
 </script>
 
-<script src="lunchorder.js"></script>
+<script src="./lunchorder.js"></script>
 </body>
 </html>
