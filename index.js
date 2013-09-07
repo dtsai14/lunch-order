@@ -52,20 +52,6 @@ function afterThePageLoads() {
         })
     }
 
-    $('.close-modal').click(function() {
-        $(this).closest('.modal').modal('hide');
-        $(this).closest('.modal-body .form').trigger('reset');
-    });
-
-    $('.logout-button').click(function() {
-        $.ajax({
-            url: "logout.php",
-            success: function() {
-                window.location.reload(true);
-            }
-        })
-    });
-
     var menuInputFile = $("#menuInputFile");
     var menuInputURL = $("#menuInputURL");
     menuInputFile.change(function() {
@@ -83,6 +69,22 @@ function afterThePageLoads() {
         }
     });
 
+    $('.close-modal').click(function() {
+        $(this).closest('.modal').modal('hide');
+        $(this).closest('.modal-body .form').trigger('reset');
+        menuInputFile.attr('disabled', false);
+        menuInputURL.attr('disabled', false);
+    });
+
+    $('.logout-button').click(function() {
+        $.ajax({
+            url: "logout.php",
+            success: function() {
+                window.location.reload(true);
+            }
+        })
+    });
+
     $("form#restaurant").submit(function() {
         var formData = new FormData($(this)[0]);
         $.ajax({
@@ -93,6 +95,8 @@ function afterThePageLoads() {
             success: function() {
                 $('#add_restaurant').modal('hide');
                 $('form#restaurant').trigger('reset');
+                menuInputFile.attr('disabled', false);
+                menuInputURL.attr('disabled', false);
             },
             cache: false,
             contentType: false,
@@ -103,6 +107,7 @@ function afterThePageLoads() {
     });
 
     function afterTableLoads() {
+
         $(".close-orders-button").hide();
 
         $('.delete-button').click(function() {
