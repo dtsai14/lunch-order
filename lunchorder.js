@@ -60,7 +60,7 @@ function afterThePageLoads() {
 
     function refreshVotes() {
         $.ajax({
-            url: "voteTable.php",
+            url: "./voteTable.php",
             success: function(data) {
                 data = JSON.parse(data);
                 console.log(data);
@@ -85,7 +85,7 @@ function afterThePageLoads() {
     $("#order_form").submit(function () {
         var order = $('#order').val();
         $.ajax({
-                url: "sendOrder.php",
+                url: "./sendOrder.php",
                 type: "POST",
                 data: {'restaurant_id': $('#restaurant-dropdown').val(),
                     'order': order},

@@ -1,7 +1,7 @@
 function afterThePageLoads() {
     $('#registration-form').submit(function() {
         $.ajax({
-            url: "registerUser.php",
+            url: "./registerUser.php",
             type: 'POST',
             data: {"firstName": $("#firstName").val(),
             "lastName": $("#lastName").val(),

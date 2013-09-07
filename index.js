@@ -13,7 +13,7 @@ function afterThePageLoads() {
 
     function refreshTakenOrders() {
         $.ajax({
-            url: "takenOrders.php",
+            url: "./takenOrders.php",
             success: function(data) {
                 data = JSON.parse(data);
                 console.log(data);
@@ -86,7 +86,7 @@ function afterThePageLoads() {
     $("form#restaurant").submit(function() {
         var formData = new FormData($(this)[0]);
         $.ajax({
-            url: "insertRestaurant.php",
+            url: "./insertRestaurant.php",
             type: 'POST',
             data: formData,
             async: false,
@@ -110,7 +110,7 @@ function afterThePageLoads() {
             $("#" + restaurant_id).hide();
             $.ajax({
                 type: "POST",
-                url: "deleteRestaurant.php",
+                url: "./deleteRestaurant.php",
                 data: {'restaurant_id': restaurant_id},
                 success: function (data) {
                     console.log(data);
@@ -146,7 +146,7 @@ function afterThePageLoads() {
                 var formData = new FormData($(this)[0]);
                 formData.append('restaurant_id', restaurant_id);
                 $.ajax({
-                    url: "addMenu.php",
+                    url: "./addMenu.php",
                     type: 'POST',
                     data: formData,
                     async: false,
@@ -168,7 +168,7 @@ function afterThePageLoads() {
             $("#" + restaurant_id + " .order-in-progress-button").show();
             $("#" + restaurant_id + " .close-orders-button").show();
             $.ajax({
-                url: "orderInProgress.php",
+                url: "./orderInProgress.php",
                 type: 'POST',
                 data: {'action': "take_orders", 'restaurant_id': restaurant_id}
             });
@@ -182,7 +182,7 @@ function afterThePageLoads() {
 
             var restaurant_id = $(this).data('restaurant-id');
             $.ajax({
-                url: "orderInProgress.php",
+                url: "./orderInProgress.php",
                 type: 'POST',
                 data: {'action': "deactivate_restaurant", 'restaurant_id': restaurant_id},
                 success: function(data) {

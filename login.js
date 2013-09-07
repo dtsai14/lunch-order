@@ -1,7 +1,7 @@
 function afterThePageLoads() {
     $('form#login').submit(function() {
         $.ajax({
-            url: "loginUser.php",
+            url: "./loginUser.php",
             type: 'POST',
             data: {'username': $('#username').val(),
             'password': $('#password').val()},
