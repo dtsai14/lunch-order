@@ -92,11 +92,12 @@ function afterThePageLoads() {
             type: 'POST',
             data: formData,
             async: false,
-            success: function() {
+            success: function(data) {
                 $('#add_restaurant').modal('hide');
                 $('form#restaurant').trigger('reset');
                 menuInputFile.attr('disabled', false);
                 menuInputURL.attr('disabled', false);
+                console.log(data);
             },
             cache: false,
             contentType: false,

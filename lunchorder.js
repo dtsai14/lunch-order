@@ -49,12 +49,14 @@ function afterThePageLoads() {
             success: function (data) {
                 data = JSON.parse(data);
                 console.log(data);
-                if (data.length) {
+                if (data['closedRestaurants'].length > 0) {
                     var source = $("#orders-closed-alert-template").html();
                     var template = Handlebars.compile(source);
                     var html= template(data);
                     $('#orders-closed-alert').html(html);
                     console.log("alert added");
+                } else {
+                    console.log("no closed restaurants");
                 }
             }
         })
