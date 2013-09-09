@@ -49,11 +49,13 @@ function afterThePageLoads() {
             success: function (data) {
                 data = JSON.parse(data);
                 console.log(data);
-                var source = $("#orders-closed-alert-template").html();
-                var template = Handlebars.compile(source);
-                var html= template(data);
-                $('#orders-closed-alert').html(html);
-                console.log("alert added");
+                if (data.length) {
+                    var source = $("#orders-closed-alert-template").html();
+                    var template = Handlebars.compile(source);
+                    var html= template(data);
+                    $('#orders-closed-alert').html(html);
+                    console.log("alert added");
+                }
             }
         })
     }
