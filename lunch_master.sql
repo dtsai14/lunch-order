@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `open_restaurants` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `restaurant_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `opening_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `opening_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `closing_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=106 ;
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `text` text NOT NULL,
   `user_id` int(11) NOT NULL,
   `restaurant_id` int(11) NOT NULL,
-  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=135 ;
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `votes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `restaurant_id` int(11) NOT NULL,
-  `creation_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
 

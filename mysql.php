@@ -76,7 +76,8 @@ function sendEmail($restaurant_id) {
 function getActiveRestaurants() {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT open_restaurants.*, restaurants.name, restaurants.menu_url, users.username FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id INNER JOIN users ON open_restaurants.user_id = users.id  WHERE date(opening_time) = curdate() AND closing_time IS NULL ORDER BY opening_time");
+        $stmt = $pdo->prepare("SELECT open_restaurants.*, restaurants.name, restaurants.menu_url, users.username FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id
+        INNER JOIN users ON open_restaurants.user_id = users.id  WHERE DATE(opening_time) = CURDATE() AND closing_time IS NULL ORDER BY opening_time");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -88,7 +89,7 @@ function getActiveRestaurants() {
 function getActiveRestaurantIds() {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT restaurant_id FROM open_restaurants WHERE date(opening_time) = curdate() AND closing_time IS NULL");
+        $stmt = $pdo->prepare("SELECT restaurant_id FROM open_restaurants WHERE DATE(opening_time) = CURDATE() AND closing_time IS NULL");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -100,7 +101,7 @@ function getActiveRestaurantIds() {
 function deactivateRestaurant($restaurant_id) {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("UPDATE open_restaurants SET closing_time = NOW() WHERE date(opening_time) = curdate() AND restaurant_id = $restaurant_id AND closing_time IS NULL");
+        $stmt = $pdo->prepare("UPDATE open_restaurants SET closing_time = NOW() WHERE DATE(opening_time) = CURDATE() AND restaurant_id = $restaurant_id AND closing_time IS NULL");
         $stmt->execute();
     } catch (PDOException $e) {
         $error = "Error!: " . $e->getMessage() . "<br/>";
@@ -111,7 +112,7 @@ function deactivateRestaurant($restaurant_id) {
 function getClosedRestaurants() {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT DISTINCT restaurant_id, restaurants.name FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id WHERE date(opening_time) = curdate() AND closing_time IS NOT NULL");
+        $stmt = $pdo->prepare("SELECT DISTINCT restaurant_id, restaurants.name FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id WHERE DATE(opening_time) = CURDATE() AND closing_time IS NOT NULL");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -123,7 +124,7 @@ function getClosedRestaurants() {
 function getRestaurantsOpenedBy($user_id) {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT DISTINCT restaurant_id, restaurants.name FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id WHERE date(opening_time) = curdate() AND user_id = $user_id AND closing_time IS NOT NULL");
+        $stmt = $pdo->prepare("SELECT DISTINCT restaurant_id, restaurants.name FROM open_restaurants INNER JOIN restaurants ON open_restaurants.restaurant_id = restaurants.id WHERE DATE(opening_time) = CURDATE() AND user_id = $user_id AND closing_time IS NOT NULL");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -135,7 +136,7 @@ function getRestaurantsOpenedBy($user_id) {
 function getOrdersForRestaurant($restaurant_id) {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT orders.*, users.first_name, users.last_name FROM orders INNER JOIN users ON orders.user_id = users.id WHERE date(creation_date) = curdate() AND restaurant_id = $restaurant_id ORDER BY creation_date");
+        $stmt = $pdo->prepare("SELECT orders.*, users.first_name, users.last_name FROM orders INNER JOIN users ON orders.user_id = users.id WHERE DATE(creation_date) = CURDATE() AND restaurant_id = $restaurant_id ORDER BY creation_date");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -176,7 +177,7 @@ function usernameExists($username) {
 function fetchOrderList() {
     global $pdo;
     try {
-        $statement = $pdo->prepare("SELECT orders.*, users.username, restaurants.name FROM orders INNER JOIN users ON orders.user_id = users.id INNER JOIN restaurants ON orders.restaurant_id = restaurants.id WHERE date(creation_date) = curdate() ORDER BY creation_date DESC");
+        $statement = $pdo->prepare("SELECT orders.*, users.username, restaurants.name FROM orders INNER JOIN users ON orders.user_id = users.id INNER JOIN restaurants ON orders.restaurant_id = restaurants.id WHERE DATE(creation_date) = CURDATE() ORDER BY creation_date DESC");
         $statement->execute();
 
         $orders = array();

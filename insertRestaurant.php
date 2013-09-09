@@ -4,7 +4,6 @@ include_once 'mysql.php';
 
 $name = $_POST['restaurantName'];
 $type = $_POST['restaurantType'];
-//have to change path so is not absolute
 
 if ($_POST['menuInputURL']) {
     $url = $_POST['menuInputURL'];
@@ -25,4 +24,3 @@ try {
     $error = "PDO error :" . $e->getMessage() . "<br/>";
     echo json_encode($error);
 }
-?>

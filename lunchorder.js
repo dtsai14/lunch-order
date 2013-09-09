@@ -26,7 +26,7 @@ function afterThePageLoads() {
                     $('#vote_alert').html("<div class='alert alert-success alert-dismissable'>" +
                         "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
                         "Your vote has been recorded!</div>");
-                } else {
+                    lunchorder} else {
                     $('#vote_alert').html("<div class='alert alert-warning alert-dismissable'>" +
                         "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
                         "You've already voted once today! Please vote again tomorrow.</div>");
