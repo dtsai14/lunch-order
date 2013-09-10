@@ -16,11 +16,12 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
+            <!--<button class="btn btn-info navbar-btn add-quote-button" type="submit">Add a Quote!</button> -->
             <button class="btn btn-primary navbar-btn logout-button" type="submit">Logout</button>
         </ul>
     </div>
 </nav>
-<div class="alert alert-success alert-dismissable">
+<div class="alert alert-success alert-dismissable" id="quote-alert">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h3>Quote of the Day:</h3> <blockquote><p><strong><span id="quote"></span></strong> <em><span id="person"></span></em>
         </p>

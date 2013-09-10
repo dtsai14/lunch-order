@@ -22,6 +22,7 @@ try {
         $_SESSION['username'] = $username;
         $_SESSION['firstname'] = $user['first_name'];
         $_SESSION['userid'] = $user['id'];
+        $_SESSION['displayQuote'] = true;
         echo json_encode("");
     } else {
         $result = json_encode("<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Invalid username/password combination. Please <a href='registration.php' class='alert-link'>register</a> or try logging in again</p>");

@@ -21,9 +21,11 @@ function afterThePageLoads() {
             url: "./greeting.php",
             success: function(data) {
                 data = JSON.parse(data);
-                $('#quote').html(data['quote']);
-                $('#person').html(data['person']);
-                $('.alert').show();
+                if (data['displayQuote']) {
+                    $('#quote').html(data['quote']);
+                    $('#person').html(data['person']);
+                    $('.alert').show();
+                }
             }
         })
     }
@@ -36,6 +38,15 @@ function afterThePageLoads() {
             }
         })
     }
+
+    $('#quote-alert').bind('close.bs.alert', function() {
+        $.ajax({
+            url: "./closeAlert.php",
+            success: function() {
+                console.log("won't display quote anymore!");
+            }
+        })
+    })
 }
 
 $(afterThePageLoads);

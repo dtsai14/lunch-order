@@ -23,4 +23,3 @@ if ($_POST['menuInputURL'] || $_FILES['menuInputFile']['name'] ){
         echo $error;
     }
 }
-?>
