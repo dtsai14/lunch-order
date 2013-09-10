@@ -54,9 +54,6 @@ function afterThePageLoads() {
                     var template = Handlebars.compile(source);
                     var html= template(data);
                     $('#orders-closed-alert').html(html);
-                    console.log("alert added");
-                } else {
-                    console.log("no closed restaurants");
                 }
             }
         })

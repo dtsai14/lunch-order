@@ -2,7 +2,7 @@
 ?>
 
 <div class="page-header">
-    <h1>Good Morning, <?php echo $_SESSION['firstname'] ?>!</h1>
+    <h1 id="greeting"></h1>
 </div>
 
 <nav class="navbar navbar-default" role="navigation">
@@ -20,5 +20,11 @@
         </ul>
     </div>
 </nav>
+<div class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h3>Quote of the Day:</h3> <blockquote><p><strong><span id="quote"></span></strong> <em><span id="person"></span></em>
+        </p>
+    </blockquote>
+</div>
 
 <script src="header.js"></script>

@@ -11,15 +11,11 @@ include_once 'mysql.php';
     ?>
 </head>
 <body>
-<?php
-date_default_timezone_set('America/Los_Angeles');
-?>
-
 <div class="container">
     <?php include "header.php";
     ?>
-    <div id="orders-closed-alert"></div>
     <div id="voting_container">
+        <div id="orders-closed-alert"></div>
         <span id="vote_alert"></span>
         <h3>Which restaurant would you like the office to order from today?</h3>
         <form id="voting_form" role="form">
