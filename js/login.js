@@ -8,7 +8,7 @@ function afterThePageLoads() {
             success: function(data) {
                 data = JSON.parse(data);
                 if (data == "") {
-                    window.location.href="../main.php";
+                    window.location.href="../index.php";
                 } else {
                     $('#alert').html(data);
                 }

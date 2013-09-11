@@ -114,7 +114,7 @@ function afterThePageLoads() {
             var restaurant_id = $(this).data('restaurant-id');
             $("#" + restaurant_id).hide();
             $.ajax({
-                url: "../php/admin/deleteRestaurant.php",
+                url: "../admin/deleteRestaurant.php",
                 type: "POST",
                 data: {'restaurant_id': restaurant_id},
                 success: function (data) {
@@ -173,7 +173,7 @@ function afterThePageLoads() {
             $("#" + restaurant_id + " .order-in-progress-button").show();
             $("#" + restaurant_id + " .close-orders-button").show();
             $.ajax({
-                url: "../php/orderInProgress.php",
+                url: "../orderInProgress.php",
                 type: 'POST',
                 data: {'action': "take_orders", 'restaurant_id': restaurant_id}
             });
