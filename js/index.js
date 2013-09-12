@@ -4,20 +4,69 @@ function afterThePageLoads() {
     $('#voting-container').hide();
     $('#ordering-container').hide();
     var takingOrders;
-    var voteTableData = {};
+    var voteData = {};
     var intervalId;
     var activeRestaurantsData = {};
     var ordersData = {};
     checkSwap();
 
+    /* check to see if the ordering form needs to be swapped our for the voting
+     * form or vice versa every 3 seconds */
     setInterval(function () {
         checkSwap();
     }, 3000);
 
+    /* checks to see if restaurants have already been opened and closed today,
+    * and displays an alert telling users if they have already been closed */
+    function alertOrdersClosed() {
+        $.ajax({
+            url: "./api.php",
+            type: 'POST',
+            data: {'cmd': "getClosedRestaurants"},
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data['closedRestaurants'].length > 0) {
+                    var source = $("#orders-closed-alert-template").html();
+                    var template = Handlebars.compile(source);
+                    var html = template(data);
+                    $('#orders-closed-alert').html(html);
+                }
+            }
+        })
+    }
+
+    /* checks and updates vote table */
+    function refreshVotes() {
+        $.ajax({
+            url: "./api.php",
+            type: 'POST',
+            data: {'cmd': 'getVotes'},
+            success: function(data) {
+                data = JSON.parse(data);
+                if (!_.isEqual(data,voteData)) {
+                    var source = $("#vote-table-template").html();
+                    var template = Handlebars.compile(source);
+                    var html = template(data);
+                    voteData = data;
+
+                    var selected = $('input[name=vote]:checked').val();
+                    $("#vote-table").html(html);
+                    $('.radio #' + selected).prop('checked', true);
+                    console.log("votes refreshed!");
+                } else {
+                    console.log("no new votes to update");
+                }
+            }
+        })
+    }
+
+    /* if user has not voted yet today, records user's vote; otherwise, doesn't
+    * let user vote. Displays alert telling user if his vote was recorded or not */
     $("#voting-form").submit(function () {
         $.ajax({
-            url: "./main/mainApi.php",
-            data: {'cmd': 'sendVote', 'restaurant_id': $('input[name=vote]:checked').val()},
+            url: "./api.php",
+            data: {'cmd': 'sendVote',
+                'restaurant_id': $('input[name=vote]:checked').val()},
             type: "POST",
             success: function (data) {
                 data = JSON.parse(data);
@@ -39,67 +88,11 @@ function afterThePageLoads() {
         return false;
     });
 
-    function alertOrdersClosed() {
-        $.ajax({
-            url: "./orderInProgress.php",
-            type: 'POST',
-            data: {'action': "get_closed_restaurants"},
-            success: function (data) {
-                data = JSON.parse(data);
-                console.log(data);
-                if (data['closedRestaurants'].length > 0) {
-                    var source = $("#orders-closed-alert-template").html();
-                    var template = Handlebars.compile(source);
-                    var html = template(data);
-                    $('#orders-closed-alert').html(html);
-                }
-            }
-        })
-    }
-
-    function refreshVotes() {
-        $.ajax({
-            url: "./main/voteTable.php",
-            success: function(data) {
-                data = JSON.parse(data);
-                console.log(data);
-                if (!_.isEqual(data,voteTableData)) {
-                    var source = $("#vote-table-template").html();
-                    var template = Handlebars.compile(source);
-                    var html = template(data);
-                    voteTableData = data;
-
-                    var selected = $('input[name=vote]:checked').val();
-                    $("#vote-table").html(html);
-                    $('.radio #' + selected).prop('checked', true);
-                    console.log("votes refreshed!");
-                } else {
-                    console.log("no new votes to update");
-                }
-            }
-        })
-    }
-
-    // adds the order to the database and refreshes the div to include new orders
-    $("#order-form").submit(function () {
-        var order = $('#order').val();
-        $.ajax({
-                url: "./main/mainApi.php",
-                type: "POST",
-                data: {'cmd': 'sendOrder', 'restaurant_id': $('#restaurant-dropdown').val(),
-                    'order': order},
-                success: function () {
-                    $('#order').val("");
-                    refreshOrders();
-                }
-            });
-        return false;
-    });
-
+    /* checks for and updates restaurant dropdown and "Today" alerts with any
+    changes in active restaurants */
     function refreshActiveRestaurants() {
-        var restaurantChoice = $('#restaurant-dropdown').val();
         $.ajax({
-            url: "./main/mainApi.php",
+            url: "./api.php",
             type: "POST",
             data: {'cmd': 'getActiveRestaurants'},
             success: function (data) {
@@ -108,6 +101,7 @@ function afterThePageLoads() {
                     var dropdownSource = $("#restaurant-dropdown-template").html();
                     var dropdownTemplate = Handlebars.compile(dropdownSource);
                     var dropdownHtml = dropdownTemplate(data);
+                    var restaurantChoice = $('#restaurant-dropdown').val();
                     $("#restaurant-dropdown").html(dropdownHtml);
                     $("#restaurant-dropdown").val(restaurantChoice);
 
@@ -124,10 +118,26 @@ function afterThePageLoads() {
         })
     }
 
-    // accesses database to update div with all current orders
+    /* when order form is submitted, order is sent to database, and order
+    * list is refreshed */
+    $("#order-form").submit(function () {
+        $.ajax({
+                url: "./api.php",
+                type: "POST",
+                data: {'cmd': 'sendOrder', 'restaurant_id': $('#restaurant-dropdown').val(),
+                    'order': $('#order').val()},
+                success: function () {
+                    $('#order').val("");
+                    refreshOrders();
+                }
+            });
+        return false;
+    });
+
+    /* checks for and updates order list with any new orders*/
     function refreshOrders() {
         $.ajax({
-            url: "./main/mainApi.php",
+            url: "./api.php",
             type: "POST",
             data: {'cmd': 'refreshOrders'},
             success: function (data) {
@@ -146,11 +156,14 @@ function afterThePageLoads() {
         });
     }
 
+    /* checks to see if any restaurants are currently active, and if the voting
+    * form needs to be switched for ordering form, or vice versa; performs
+     * needed switch */
     function checkSwap() {
         $.ajax({
-            url: "./orderInProgress.php",
+            url: "./api.php",
             type: 'POST',
-            data: {'action': "get_active_restaurants"},
+            data: {'cmd': "getActiveRestaurants"},
             success: function(data) {
                 data = JSON.parse(data);
                 var activeRestaurants = data['activeRestaurants'];

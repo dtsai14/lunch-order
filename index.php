@@ -7,7 +7,6 @@ include_once './mysql.php';
 <html>
 <head lang="en">
     <title>Lunch Task Manager</title>
-    sources should be here
     <?php include_once './sources.php';
     ?>
 </head>
@@ -71,10 +70,12 @@ include_once './mysql.php';
 
 
 <script id="vote-alert-template" type="text/x-handlebars-template">
+    {{#voteAlert}}
     <div class='alert alert-{{type}} alert-dismissable'>
         <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
         {{text}}
     </div>
+    {{/voteAlert}}
 </script>
 
 <script id="vote-table-template" type="text/x-handlebars-template">

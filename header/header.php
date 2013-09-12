@@ -12,7 +12,7 @@ include_once 'authenticate.php';
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav nav-pills">
-            <li id="lunchorder"><a href="./main.php">Lunch Order</a></li>
+            <li id="lunchorder"><a href="./index.php">Lunch Order</a></li>
             <li id="admin"><a href="./admin.php">Admin Page</a></li>
         </ul>
 
@@ -29,4 +29,4 @@ include_once 'authenticate.php';
     </blockquote>
 </div>
 
-<script src="../js/header.js"></script>
+<script src="./js/header.js"></script>

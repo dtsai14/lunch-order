@@ -42,5 +42,5 @@ include 'redirectHome.php';
         <br>
         <div id="alert"></div>
     </div>
-<script src="registration.js"></script>
+<script src="../js/registration.js"></script>
 </body>

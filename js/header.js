@@ -5,7 +5,9 @@ function afterThePageLoads() {
 
     $('.logout-button').click(function() {
         $.ajax({
-            url: "./header/logout.php",
+            url: "./header/headerApi.php",
+            type: 'POST',
+            data: {'cmd': 'logout'},
             success: function() {
                 window.location.reload(true);
             }
@@ -16,23 +18,11 @@ function afterThePageLoads() {
         updateGreeting();
     }, 3000);
 
-    function alertQuote() {
-        $.ajax({
-            url: "./header/greeting.php",
-            success: function(data) {
-                data = JSON.parse(data);
-                if (data['displayQuote']) {
-                    $('#quote').html(data['quote']);
-                    $('#person').html(data['person']);
-                    $('.alert').show();
-                }
-            }
-        })
-    }
-
     function updateGreeting() {
         $.ajax({
-            url: "./header/greeting.php",
+            url: "./header/headerApi.php",
+            type: 'POST',
+            data: {'cmd': 'getGreeting'},
             success: function(data) {
                 data = JSON.parse(data);
                 $('#greeting').html(data['greeting']);
@@ -43,13 +33,30 @@ function afterThePageLoads() {
         })
     }
 
+    function alertQuote() {
+        $.ajax({
+            url: "./header/headerApi.php",
+            type: 'POST',
+            data: {'cmd': 'getQuote'},
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data['display_quote']) {
+                    $('#quote').html(data['quote']);
+                    $('#person').html(data['person']);
+                    $('.alert').show();
+                }
+            }
+        })
+    }
+
     $('#quote-alert').bind('close.bs.alert', function() {
         $.ajax({
-            url: "./header/closeAlert.php",
+            url: "./header/headerApi.php",
+            type: 'POST',
+            data: {'cmd': 'closeAlert'},
             success: function(data) {
                 console.log("display quote =");
                 console.log(data);
-                console.log("won't display quote anymore!");
             }
         })
     })

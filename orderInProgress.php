@@ -10,6 +10,8 @@ if (isset($_POST['action'])) {
         $active_restaurants = sqlGetActiveRestaurants();
         echo json_encode(array('activeRestaurants'=>$active_restaurants));
     } else if ($_POST['action'] == "deactivate_restaurant"){
+        /* deactivates restaurant and gathers all orders for the restaurant today,
+        return a JSON array of */
         $restaurant_id = $_POST['restaurant_id'];
         sqlDeactivateRestaurant($restaurant_id);
         $orders = sqlGetOrdersForRestaurant($restaurant_id);

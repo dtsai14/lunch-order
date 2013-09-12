@@ -22,7 +22,7 @@ try {
         $_SESSION['username'] = $username;
         $_SESSION['first_name'] = $user['first_name'];
         $_SESSION['user_id'] = $user['id'];
-        $_SESSION['displayQuote'] = true;
+        $_SESSION['display_quote'] = true;
         echo json_encode("");
     } else {
         $result = json_encode("<div class='alert alert-danger alert-dismissable'>
