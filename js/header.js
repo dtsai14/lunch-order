@@ -3,6 +3,7 @@ function afterThePageLoads() {
     updateGreeting();
     alertQuote();
 
+    /* logs user out and refreshes to login page*/
     $('.logout-button').click(function() {
         $.ajax({
             url: "./header/headerApi.php",
@@ -14,10 +15,12 @@ function afterThePageLoads() {
         })
     });
 
+    /* update greeting every 3 seconds */
     setInterval(function () {
         updateGreeting();
     }, 3000);
 
+    /* updates greeting based on time */
     function updateGreeting() {
         $.ajax({
             url: "./header/headerApi.php",
@@ -33,6 +36,8 @@ function afterThePageLoads() {
         })
     }
 
+    /* displays quote of day, unless user has closed quote of day alert during
+    * this session*/
     function alertQuote() {
         $.ajax({
             url: "./header/headerApi.php",
@@ -49,6 +54,8 @@ function afterThePageLoads() {
         })
     }
 
+    /* when quote of day alert is closed, keeps user from seeing alert again
+     * this session */
     $('#quote-alert').bind('close.bs.alert', function() {
         $.ajax({
             url: "./header/headerApi.php",

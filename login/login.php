@@ -31,7 +31,12 @@ include 'redirectHome.php';
         </fieldset>
     </form>
     <br>
-    <div id="alert"></div>
+    <div class='alert alert-danger alert-dismissable' id="invalid-alert">
+        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+            &times;
+        </button>
+        Invalid username/password combination. Please <a href='registration.php' class='alert-link'>register</a> or try logging in again
+    </div>
 </div>
 
 <script src="../js/login.js"></script>

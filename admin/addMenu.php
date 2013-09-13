@@ -2,6 +2,7 @@
 include '../authenticate.php';
 include '../mysql.php';
 
+/* takes the uploaded file or menu url and adds it to database */
 if ($_POST['menuInputURL'] || $_FILES['menuInputFile']['name'] ){
     $restaurant_id = $_POST['restaurant_id'];
     if ($_POST['menuInputURL']) {

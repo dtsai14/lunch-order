@@ -16,7 +16,7 @@ include 'redirectHome.php';
             <br>
             If you already have an account, log in <a href="./login.php">here</a>.
         </div>
-        <form role="form" id="registration-form" action="registerUser.php" method="post">
+        <form role="form" id="registration-form">
             <fieldset>
                 <legend>Registration</legend>
                 <div class="form-group">
@@ -40,7 +40,17 @@ include 'redirectHome.php';
             </fieldset>
         </form>
         <br>
-        <div id="alert"></div>
+        <div id="register-alert"></div>
     </div>
+
+<script id="register-alert-template" type="text/x-handlebars-template">
+    {{#alert}}
+    <div class='alert alert-{{type}}' alert-dismissable'>
+        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+        {{{text}}}
+        </div>
+    {{/alert}}
+</script>
+
 <script src="../js/registration.js"></script>
 </body>

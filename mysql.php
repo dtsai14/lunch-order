@@ -11,7 +11,42 @@ $pdo = new PDO("mysql:host={$dbhost};dbname={$dbname}", $dbuser, $dbpass);
 $stmt = $pdo->prepare("SET time_zone = 'America/Los_Angeles'");
 $stmt->execute();
 
+function sqlRegisterUser($username,$token,$first_name,$last_name,$email) {
+    global $pdo;
+    try {
+        $statement = $pdo->prepare("INSERT INTO users (username,password,
+        first_name,last_name,email) VALUES (?,?,?,?,?)");
+        $statement->execute(array($username,$token,$first_name,$last_name,$email));
+        $_SESSION['username'] = $username;
+        $_SESSION['first_name'] = $first_name;
+        $_SESSION['user_id'] = $pdo->lastInsertID();
+        $_SESSION['display_quote'] = true;
+    } catch (PDOException $e) {
+        $error = "Error!: " . $e->getMessage() . "<br/>";
+        return $error;
+    }
+}
 
+function sqlLoginUser($username,$token) {
+    global $pdo;
+    try {
+        $statement = $pdo->prepare("SELECT * FROM users WHERE username='$username'");
+        $statement->execute();
+        $user = $statement->fetch();
+        if ($user['password'] == $token) {
+            $_SESSION['username'] = $username;
+            $_SESSION['first_name'] = $user['first_name'];
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['display_quote'] = true;
+            return true;
+        } else {
+            return false;
+        }
+    } catch (PDOException $exception) {
+        $error = "Error!: " . $e->getMessage() . "<br/>";
+        return $error;
+    }
+}
 
 /*************** Misc ********************/
 function sqlGetRestaurants() {

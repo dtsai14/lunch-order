@@ -17,7 +17,7 @@ include_once 'authenticate.php';
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <button class="btn btn-default navbar-btn add-quote-button" type="submit">Add a Quote!</button>
+            <!--<button class="btn btn-default navbar-btn add-quote-button" type="submit">Add a Quote!</button>-->
             <button class="btn btn-primary navbar-btn logout-button" type="submit">Logout</button>
         </ul>
     </div>

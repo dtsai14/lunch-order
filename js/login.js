@@ -1,16 +1,20 @@
 function afterThePageLoads() {
+    $('#invalid-alert').hide(); // hide invalid username/password alert initially
+
+    /* when login form is submitted, either logs in user and redirects to
+     * homepage, or displays invalid username/password alert */
     $('form#login').submit(function() {
         $.ajax({
-            url: "./loginUser.php",
+            url: "./loginApi.php",
             type: 'POST',
-            data: {'username': $('#username').val(),
+            data: {'cmd': 'loginUser', 'username': $('#username').val(),
             'password': $('#password').val()},
             success: function(data) {
                 data = JSON.parse(data);
-                if (data == "") {
+                if (data['loggedIn']) {
                     window.location.href="../index.php";
                 } else {
-                    $('#alert').html(data);
+                    $('#invalid-alert').show();
                 }
             }
         });
