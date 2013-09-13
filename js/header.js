@@ -2,9 +2,19 @@ function afterThePageLoads() {
     $('.alert').hide();
     updateGreeting();
     alertQuote();
+    displayPic();
 
+    /* update greeting every 3 seconds */
+    setInterval(function () {
+        updateGreeting();
+    }, 3000);
+
+    var interval = setInterval(function() {
+        displayPic();
+        console.log("will run every 3 seconds until user has voted and pic is displayed!!");
+    }, 3000);
     /* logs user out and refreshes to login page*/
-    $('.logout-button').click(function() {
+    $('.logout-button').click(function () {
         $.ajax({
             url: "./header/headerApi.php",
             type: 'POST',
@@ -15,10 +25,25 @@ function afterThePageLoads() {
         })
     });
 
-    /* update greeting every 3 seconds */
-    setInterval(function () {
-        updateGreeting();
-    }, 3000);
+    /* checks to see if picture should be displayed beside greeting, inserting*/
+    function displayPic() {
+        $.ajax({
+            url: "./header/headerApi.php",
+            type: 'POST',
+            data: {'cmd': 'getPicUrl'},
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data['display_pic']) {
+                    var source = $('#pic-opt-template').html();
+                    var template = Handlebars.compile(source);
+                    var html = template(data);
+                    $('#pic-opt').html(html);
+                    clearInterval(interval);
+                    console.log("no longer checking for pic!");
+                }
+            }
+        })
+    }
 
     /* updates greeting based on time */
     function updateGreeting() {
@@ -26,7 +51,7 @@ function afterThePageLoads() {
             url: "./header/headerApi.php",
             type: 'POST',
             data: {'cmd': 'getGreeting'},
-            success: function(data) {
+            success: function (data) {
                 data = JSON.parse(data);
                 $('#greeting').html(data['greeting']);
             },

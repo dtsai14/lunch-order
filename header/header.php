@@ -2,8 +2,13 @@
 include_once 'authenticate.php';
 ?>
 
-<div class="page-header">
-    <h1 id="greeting"></h1>
+<div class="page-header" style="height: 100px">
+    <div class="media">
+        <div id="pic-opt"></div>
+        <h1 id="greeting"></h1>
+
+    </div>
+
 </div>
 
 <nav class="navbar navbar-default" role="navigation">
@@ -29,4 +34,9 @@ include_once 'authenticate.php';
     </blockquote>
 </div>
 
+<script id="pic-opt-template" type="text/x-handlebars-template">
+    <a class="pull-left">
+        <img class="media-object img-thumbnail" src="{{display_pic}}" alt="cute pic" style="max-height: 100%; max-width: 100%">
+    </a>
+</script>
 <script src="./js/header.js"></script>

@@ -14,13 +14,14 @@ $stmt->execute();
 function sqlRegisterUser($username,$token,$first_name,$last_name,$email) {
     global $pdo;
     try {
-        $statement = $pdo->prepare("INSERT INTO users (username,password,
+        $stmt = $pdo->prepare("INSERT INTO users (username,password,
         first_name,last_name,email) VALUES (?,?,?,?,?)");
-        $statement->execute(array($username,$token,$first_name,$last_name,$email));
+        $stmt->execute(array($username,$token,$first_name,$last_name,$email));
         $_SESSION['username'] = $username;
         $_SESSION['first_name'] = $first_name;
         $_SESSION['user_id'] = $pdo->lastInsertID();
         $_SESSION['display_quote'] = true;
+        $_SESSION['display_pic'] = false;
     } catch (PDOException $e) {
         $error = "Error!: " . $e->getMessage() . "<br/>";
         return $error;
@@ -30,19 +31,51 @@ function sqlRegisterUser($username,$token,$first_name,$last_name,$email) {
 function sqlLoginUser($username,$token) {
     global $pdo;
     try {
-        $statement = $pdo->prepare("SELECT * FROM users WHERE username='$username'");
-        $statement->execute();
-        $user = $statement->fetch();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username='$username'");
+        $stmt->execute();
+        $user = $stmt->fetch();
         if ($user['password'] == $token) {
             $_SESSION['username'] = $username;
             $_SESSION['first_name'] = $user['first_name'];
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['display_quote'] = true;
+            if (sqlHasVoted($user['id'])) {
+                $_SESSION['display_pic'] = pickPic();
+            } else  {
+                $_SESSION['display_pic'] = false;
+            }
             return true;
         } else {
             return false;
         }
-    } catch (PDOException $exception) {
+    } catch (PDOException $e) {
+        $error = "Error!: " . $e->getMessage() . "<br/>";
+        return $error;
+    }
+}
+
+function pickPic() {
+    $sources = array("http://therufusway.files.wordpress.com/2013/05/cutest-little-corgi-ever.jpeg",
+        "http://1.bp.blogspot.com/-0IKvqJctUT8/TV6FkkC2mmI/AAAAAAAAA7c/1SjSs2-Mhs0/s400/pig.jpg",
+        "http://cutenfunny.com/thumbs/?src=photos/tumblr_mesgdzhrap1qew6kmo1_500.jpg&w=600&zc=1",
+        "http://cdn.cutestpaw.com/wp-content/uploads/2011/11/cute-puppy-l1.jpg",
+        "http://cutestuff.co/wp-content/uploads/2012/03/cute_cat_eyes.jpg",
+        "http://www.aplacetolovedogs.com/wp-content/uploads/2012/10/cute-corgi-bum.jpg",
+        "http://data.whicdn.com/images/9148878/cute,dog,puppy,corgi,puppies,baby-c47f30e1d63cc913cefb8204bd961193_h_large.jpg",
+        "http://memberfiles.freewebs.com/94/63/70766394/photos/Puppies/cori%20puppy.jpg");
+
+    $randomKey = array_rand($sources);
+    return $sources[$randomKey];
+}
+
+function sqlHasVoted($user_id) {
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM votes WHERE DATE(creation_time) =
+        CURDATE() AND user_id = $user_id");
+        $stmt->execute();
+        return $stmt->fetch();
+    } catch (PDOException $e) {
         $error = "Error!: " . $e->getMessage() . "<br/>";
         return $error;
     }
@@ -152,18 +185,16 @@ function sqlGetNumUsers() {
 function sqlSendVote($user_id, $restaurant_id) {
     global $pdo;
     try {
-        $statement = $pdo->prepare("SELECT * FROM votes WHERE DATE(creation_time) =
-        CURDATE() AND user_id = $user_id");
-        $statement->execute();
-        if ($statement->fetch()) {
+        if (sqlHasVoted($user_id)) {
             $type = 'warning';
             $text = "You've already voted once today! Please vote again tomorrow.";
         } else {
-            $statement = $pdo->prepare("INSERT INTO votes(user_id,restaurant_id)
+            $stmt = $pdo->prepare("INSERT INTO votes(user_id,restaurant_id)
              VALUES (?,?)");
-            $statement->execute(array($user_id, $restaurant_id));
+            $stmt->execute(array($user_id, $restaurant_id));
             $type = 'success';
             $text = "Your vote has been recorded!";
+            $_SESSION['display_pic'] = pickPic(); // make header display pic
         };
         return array('type' => $type, 'text' => $text);
     } catch (PDOException $e) {
@@ -178,9 +209,9 @@ function sqlSendVote($user_id, $restaurant_id) {
 function sqlSendOrder($order, $user_id, $restaurant_id) {
     global $pdo;
     try {
-        $statement = $pdo->prepare("INSERT INTO orders (text,user_id,restaurant_id)
+        $stmt = $pdo->prepare("INSERT INTO orders (text,user_id,restaurant_id)
         VALUES (?,?,?)");
-        $statement->execute(array($order, $user_id, $restaurant_id));
+        $stmt->execute(array($order, $user_id, $restaurant_id));
     } catch (PDOException $e) {
         print "Error!: " . $e->getMessage() . "<br/>";
         die();
@@ -190,14 +221,14 @@ function sqlSendOrder($order, $user_id, $restaurant_id) {
 function sqlFetchOrderList() {
     global $pdo;
     try {
-        $statement = $pdo->prepare("SELECT orders.*, users.username, restaurants.name
+        $stmt = $pdo->prepare("SELECT orders.*, users.username, restaurants.name
         FROM orders INNER JOIN users ON orders.user_id = users.id INNER JOIN restaurants
         ON orders.restaurant_id = restaurants.id WHERE DATE(creation_date) = CURDATE()
         ORDER BY creation_date DESC");
-        $statement->execute();
+        $stmt->execute();
 
         $orders = array();
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $orders []= array('username' => $row['username'], 'restaurant_name' =>
             $row['name'], 'text' => $row['text'], 'creation_time' =>
             date("g:i a", strtotime($row['creation_date'])));
@@ -235,8 +266,8 @@ function sqlSendEmail($restaurant_id) {
 function sqlAddRestaurant($name, $type, $url) {
     global $pdo;
     try {
-        $statement = $pdo->prepare("INSERT INTO restaurants (name,food_type,menu_url) VALUES (?,?,?)");
-        $statement->execute(array($name, $type, $url));
+        $stmt = $pdo->prepare("INSERT INTO restaurants (name,food_type,menu_url) VALUES (?,?,?)");
+        $stmt->execute(array($name, $type, $url));
     } catch (PDOException $e){
         $error = "PDO error :" . $e->getMessage() . "<br/>";
         echo $error;
