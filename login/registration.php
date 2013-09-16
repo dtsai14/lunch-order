@@ -33,10 +33,14 @@ include 'redirectHome.php';
                     <input type="password" class="input-small" name="password" id="password" required>
                 </div>
                 <div class="form-group">
+                    <label for="password">Confirm Password</label>
+                    <input type="password" class="input-small" name="password-confirm" id="password-confirm" required>
+                </div>
+                <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="input-small" name="email" id="email" required>
                 </div>
-                <button type="submit" class="btn btn-default">Register!</button>
+                <button type="submit" class="btn btn-default" id="register-button">Register!</button>
             </fieldset>
         </form>
         <br>

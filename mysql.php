@@ -55,14 +55,32 @@ function sqlLoginUser($username,$token) {
 }
 
 function pickPic() {
-    $sources = array("http://therufusway.files.wordpress.com/2013/05/cutest-little-corgi-ever.jpeg",
+    /*$sources = array("http://therufusway.files.wordpress.com/2013/05/cutest-little-corgi-ever.jpeg",
         "http://1.bp.blogspot.com/-0IKvqJctUT8/TV6FkkC2mmI/AAAAAAAAA7c/1SjSs2-Mhs0/s400/pig.jpg",
         "http://cutenfunny.com/thumbs/?src=photos/tumblr_mesgdzhrap1qew6kmo1_500.jpg&w=600&zc=1",
         "http://cdn.cutestpaw.com/wp-content/uploads/2011/11/cute-puppy-l1.jpg",
         "http://cutestuff.co/wp-content/uploads/2012/03/cute_cat_eyes.jpg",
         "http://www.aplacetolovedogs.com/wp-content/uploads/2012/10/cute-corgi-bum.jpg",
         "http://data.whicdn.com/images/9148878/cute,dog,puppy,corgi,puppies,baby-c47f30e1d63cc913cefb8204bd961193_h_large.jpg",
-        "http://memberfiles.freewebs.com/94/63/70766394/photos/Puppies/cori%20puppy.jpg");
+        "http://memberfiles.freewebs.com/94/63/70766394/photos/Puppies/cori%20puppy.jpg",
+        "http://thatssogloss.com/wp-content/uploads/2013/01/HD-Cute-Animals-rabbits-kissing.jpg",
+        "http://thatssogloss.com/wp-content/uploads/2013/01/cutepuppykitten.jpg",
+        "http://www.wallibs.com/newimg/1600x1200-cute-animals-random.jpg",
+        "http://www.funnypica.com/wp-content/uploads/2012/09/Cute-Animals-20.jpg"
+    );*/
+
+    $sources = array("./Cuteness/1600x1200-cute-animals-random.jpg",
+        "./Cuteness/cori puppy.jpg", 
+        "./Cuteness/cute,dog,puppy,corgi,puppies,baby-c47f30e1d63cc913cefb8204bd961193_h_large.jpg",
+        "./Cuteness/Cute-Animals-20.jpg", 
+        "./Cuteness/cute-corgi-bum.jpg", 
+        "./Cuteness/cute-puppy-l1.jpg", 
+        "./Cuteness/cute_cat_eyes.jpg",
+        "./Cuteness/cutepuppykitten.jpg",
+        "./Cuteness/cutest-little-corgi-ever.jpeg",
+        "./Cuteness/HD-Cute-Animals-rabbits-kissing.jpg",
+        "./Cuteness/HD-Cute-Animals-rabbits-kissing.jpg"
+    );
 
     $randomKey = array_rand($sources);
     return $sources[$randomKey];
@@ -193,7 +211,7 @@ function sqlSendVote($user_id, $restaurant_id) {
              VALUES (?,?)");
             $stmt->execute(array($user_id, $restaurant_id));
             $type = 'success';
-            $text = "Your vote has been recorded!";
+            $text = "Your vote has been recorded! Thank you for voting :)";
             $_SESSION['display_pic'] = pickPic(); // make header display pic
         };
         return array('type' => $type, 'text' => $text);

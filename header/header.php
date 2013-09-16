@@ -6,7 +6,6 @@ include_once 'authenticate.php';
     <div class="media">
         <div id="pic-opt"></div>
         <h1 id="greeting"></h1>
-
     </div>
 
 </div>
@@ -35,7 +34,7 @@ include_once 'authenticate.php';
 </div>
 
 <script id="pic-opt-template" type="text/x-handlebars-template">
-    <a class="pull-left">
+    <a class="pull-left" href="http://thatssogloss.com/looking-at-cute-animals-improves-productivity/" target="_blank">
         <img class="media-object img-thumbnail" src="{{display_pic}}" alt="cute pic" style="max-height: 100%; max-width: 100%">
     </a>
 </script>

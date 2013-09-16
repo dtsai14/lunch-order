@@ -4,15 +4,16 @@ function afterThePageLoads() {
     alertQuote();
     displayPic();
 
-    /* update greeting every 3 seconds */
+    /* update greeting every minute */
     setInterval(function () {
         updateGreeting();
-    }, 3000);
+    }, 60000);
 
+    /* check whether need to display picture every 3 seconds */
     var interval = setInterval(function() {
         displayPic();
-        console.log("will run every 3 seconds until user has voted and pic is displayed!!");
     }, 3000);
+
     /* logs user out and refreshes to login page*/
     $('.logout-button').click(function () {
         $.ajax({
@@ -39,7 +40,6 @@ function afterThePageLoads() {
                     var html = template(data);
                     $('#pic-opt').html(html);
                     clearInterval(interval);
-                    console.log("no longer checking for pic!");
                 }
             }
         })
