@@ -10,7 +10,7 @@ function afterThePageLoads() {
     }, 60000);
 
     /* check whether need to display picture every 3 seconds */
-    var interval = setInterval(function() {
+    var interval = setInterval(function () {
         displayPic();
     }, 3000);
 
@@ -26,7 +26,7 @@ function afterThePageLoads() {
         })
     });
 
-    /* checks to see if picture should be displayed beside greeting, inserting*/
+    /* checks to see if picture should be displayed beside greeting, inserting */
     function displayPic() {
         $.ajax({
             url: "./header/headerApi.php",

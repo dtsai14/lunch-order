@@ -25,7 +25,7 @@ function getGreeting() {
         $greeting = "Good Morning, $name!";
     } elseif ($hour == 12) {
         if ($minute == 0) {
-            $greeting = "Good Noon, $name! ~(^_^)/ (￣ー￣) ( ^_^）o自自o（^_^ ） ";
+            $greeting = "Good Noon, $name! ~(^_^)/ ( ^_^）o自自o（^_^ ） ";
         } else {
             $greeting = "$name, it's time for lunch!";
         }
@@ -40,7 +40,8 @@ function getGreeting() {
     return json_encode(array("greeting" => $greeting));
 }
 
-/* depending on day, returns a quote */
+/* depending on day, returns JSON array containing quote, author of quote, and
+whether or not quote is to be displayed */
 function getQuote() {
     $quotes = array(
         "Gandhi"=>"Strength does not come from physical capacity. It comes from
@@ -49,12 +50,6 @@ function getQuote() {
         to do it. Is it reckless? Maybe. But what do dreams know of boundaries?",
         "Baruch Spinoza"=>"I have made a ceaseless effort not to ridicule, not
         to bewail, not to scorn human actions, but to understand them.",
-        "Beverly Sills"=>"You may be disappointed if you fail, but you are
-        doomed if you don't try.",
-        "Amelia Earhart"=>"The most difficult thing is the decision to act, the
-        rest is merely tenacity. The fears are paper tigers. You can do anything
-        you decide to do. You can act to change and control your life; and the
-        procedure, the process is its own reward.",
         "Albert Einstein"=>"Try not to become a man of success but rather try
         to become a man of value.",
         "Buddha"=>"In compassion lies the world's true strength",
@@ -73,7 +68,19 @@ function getQuote() {
         "Zig Ziglar"=>"People often say that motivation doesn't last. Well,
         neither does bathing. That's why we recommend it daily.",
         "Ancient Indian Proverb"=>"Certain things catch your eye, but pursue
-        only those that capture the heart."
+        only those that capture the heart.",
+        "FACT"=>"There used to be a street named after Chuck Norris, but it was
+        changed because nobody crosses Chuck Norris and lives.",
+        "Montesquieu"=>"I have always observed that to succeed in the world one
+        should seem a fool, but be wise.",
+        "Eleanor Roosevelt"=>"Life was meant to be lived, and curiosity must be
+        kept alive. One must never, for whatever reason, turn his back on life.",
+        "Henry David Thoreau"=>"As a single footstep will not make a path on the
+        earth, so a single thought will not make a pathway in the mind. To make
+        a deep physical path, we walk again and again. To make a deep mental
+        path, we must think over and over the kind of thoughts we wish to
+        dominate our lives."
+
     );
 
     $people = array_keys($quotes);

@@ -19,6 +19,7 @@ include_once './mysql.php';
             <th>Restaurant</th>
             <th>Food Type</th>
             <th>Menu</th>
+            <th>Phone</th>
         </tr>
         </thead>
         <tbody id="admin-table">
@@ -48,11 +49,22 @@ include './admin/menuModal.php';
             <td>{{name}}</td>
             <td>{{food_type}}</td>
             <td class='restaurant-actions' data-taking-orders='{{taking_orders}}' data-auth-close='{{auth_close}}' data-menu-url='{{menu_url}}'>
-            <button class='view-menu-button btn btn-info btn-xs' data-menu-url='{{menu_url}}'>View Menu</button>
-            <button class='add-menu-button btn btn-default btn-xs' data-restaurant-id='{{id}}'>Add Menu</button>
-            <button class='take-orders-button btn btn-success btn-xs' data-restaurant-id='{{id}}'>Take Orders</button>
-            <button class='order-in-progress-button btn btn-success btn-xs' disabled=true>Taking Orders...</button>
-            <button class='close-orders-button btn btn-danger btn-xs pull-right' data-restaurant-id='{{id}}'>Close Orders</button>
+                <button class='view-menu-button btn btn-info btn-xs' data-menu-url='{{menu_url}}'>View Menu</button>
+                <button class='add-menu-button btn btn-default btn-xs' data-restaurant-id='{{id}}'>Add Menu</button>
+                <button class='take-orders-button btn btn-success btn-xs' data-restaurant-id='{{id}}'>Take Orders</button>
+                <button class='order-in-progress-button btn btn-success btn-xs' disabled=true>Taking Orders...</button>
+                <button class='close-orders-button btn btn-danger btn-xs pull-right' data-restaurant-id='{{id}}'>Close Orders</button>
+            </td>
+            <td class='restaurant-phone' data-phone-num='{{phone_num}}'>
+                <div class='call-link'>{{phone_num}}</div>
+                <button class='add-phone-button btn btn-default btn-xs' data-restaurant-id='{{id}}'>Add Phone</button>
+                <form class="form-inline add-phone-form" role="form">
+                    <div class="form-group">
+                        <label class="sr-only" for="phone-input">Phone Number</label>
+                        <input type="text" class="form-control" id="phone-input" placeholder="(425) 555-5555">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-xs">Add</button>
+                </form>
             </td>
         </tr>
     {{/restaurants}}

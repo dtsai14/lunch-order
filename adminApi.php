@@ -28,7 +28,7 @@ function getTable() {
         $json_restaurant = array("id" => $restaurant['id'],
             "name" => $restaurant['name'], "food_type" => $restaurant['food_type'],
             "menu_url" => $restaurant['menu_url'], "taking_orders" => $taking_orders,
-            "auth_close" => $auth_close);
+            "auth_close" => $auth_close, "phone_num" => $restaurant['phone_num']);
         $json_restaurants[] = $json_restaurant;
     }
     return json_encode(array("restaurants" => $json_restaurants));
@@ -40,11 +40,17 @@ function deleteRestaurant() {
     sqlDeleteRestaurant($restaurant_id);
 }
 
+function addPhone() {
+    $restaurant_id = $_POST['restaurant_id'];
+    $phone = $_POST['phone'];
+    sqlAddPhone($restaurant_id, $phone);
+}
+
 /* returns JSON array containing data about orders from restaurants this user
 opened today, leaving out restaurants for which no one placed orders */
 function getTakenOrders() {
     $json_taken_orders = array();
-    foreach (sqlGetRestaurantsOpenedBy($_SESSION['user_id']) as $restaurant) {
+    foreach (sqlGetRestaurantsClosedBy($_SESSION['user_id']) as $restaurant) {
         $orders = sqlGetOrdersForRestaurant($restaurant['restaurant_id']);
         if (!empty($orders)) {
             $orders_array = array();

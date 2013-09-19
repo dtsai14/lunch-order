@@ -6,6 +6,11 @@ include '../mysql.php';
 
 $name = $_POST['restaurantName'];
 $type = $_POST['restaurantType'];
+if (isset($_POST['phoneNumber'])) {
+    $phone = $_POST['phoneNumber'];
+} else {
+    $phone = "";
+}
 
 if ($_POST['menuInputURL']) {
     $url = $_POST['menuInputURL'];
@@ -19,4 +24,4 @@ if ($_POST['menuInputURL']) {
     $url = "";
 }
 
-sqlAddRestaurant($name, $type, $url);
+sqlAddRestaurant($name, $type, $url, $phone);

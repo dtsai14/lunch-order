@@ -20,6 +20,10 @@
                             <input type="text" class="form-control" id="restaurantType" name="restaurantType" placeholder="Restaurant Type" required/>
                         </div>
                         <div class="form-group">
+                            <label for="phoneNumber">Phone</label>
+                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="(425) 555-5555">
+                        </div>
+                        <div class="form-group">
                             <label for="menuInput">Menu</label>
                             <input type="file" name="menuInputFile" id="menuInputFile">
                             <br>Or enter URL:<br>

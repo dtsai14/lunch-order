@@ -13,12 +13,26 @@ if ($cmd == 'getVotes') { // from indexApi.php
     echo getClosedRestaurants();
 } else if ($cmd == 'refreshOrders') {
     echo refreshOrders();
+} else if ($cmd == 'getRejectedOrders') {
+    echo getRejectedOrders();
+} else if ($cmd =='checkRejectedChanges') {
+    echo checkRejectedChanges();
 } else if ($cmd == 'sendOrder') {
     sendOrder();
+} else if ($cmd == 'deleteOrder') {
+    deleteOrder();
+} else if ($cmd == 'changeOrder') {
+    changeOrder();
+} else if ($cmd == 'rejectOrder') {
+    rejectOrder();
+} else if ($cmd == 'acceptOrder') {
+    acceptOrder();
 } else if ($cmd == 'getTable') { // from adminApi.php
     echo getTable();
 } else if ($cmd == 'deleteRestaurant') {
     deleteRestaurant();
+} else if ($cmd == 'addPhone') {
+    addPhone();
 } else if ($cmd == 'getTakenOrders') {
     echo getTakenOrders();
 } else if ($cmd == 'takeOrders') {
