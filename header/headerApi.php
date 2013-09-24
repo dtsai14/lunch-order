@@ -44,6 +44,10 @@ function getGreeting() {
 whether or not quote is to be displayed */
 function getQuote() {
     $quotes = array(
+        "Mark Twain"=>"Twenty years from now you will be more disappointed by
+        the things that you didn't do than by the ones you did do, so throw off
+        the bowlines, sail away from the safe harbor, catch the trade winds in
+        your sails. Explore, Dream, Discover.",
         "Gandhi"=>"Strength does not come from physical capacity. It comes from
         an indomitable will.",
         "Amelia Earhart"=>"Everyone has oceans to fly, if they have the heart
@@ -52,6 +56,10 @@ function getQuote() {
         to bewail, not to scorn human actions, but to understand them.",
         "Albert Einstein"=>"Try not to become a man of success but rather try
         to become a man of value.",
+        "Ralph Waldo Emerson"=>"Watch your thoughts for they become words,
+        watch your words for they become actions, watch your actions, for they
+        become habits, watch your habits for they become your character, watch
+        your character for it becomes your destiny.",
         "Buddha"=>"In compassion lies the world's true strength",
         "Helen Keller"=>"When one door closes another opens. But often we look
         so long so regretfully upon the closed door that we fail to see the one
@@ -59,10 +67,6 @@ function getQuote() {
         "Mohandas Gandhi"=>"Always aim at complete harmony of thought and word
         and deed. Always aim at purifying your thoughts and everything will be
         well.",
-        "Mark Twain"=>"Twenty years from now you will be more disappointed by
-        the things that you didn't do than by the ones you did do, so throw off
-        the bowlines, sail away from the safe harbor, catch the trade winds in
-        your sails. Explore, Dream, Discover.",
         "Chinese Proverb"=>"The best time to plant a tree was 20 years ago. The
         second best time is now.",
         "Zig Ziglar"=>"People often say that motivation doesn't last. Well,
@@ -80,7 +84,6 @@ function getQuote() {
         a deep physical path, we walk again and again. To make a deep mental
         path, we must think over and over the kind of thoughts we wish to
         dominate our lives."
-
     );
 
     $people = array_keys($quotes);

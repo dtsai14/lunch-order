@@ -143,6 +143,7 @@ closing_time IS NULL ORDER BY opening_time");
 }
 
 /**************************************don't need this anymore? **********************************/
+/* returns the ids of restaurants which are currently open for today */
 function sqlGetActiveRestaurantIds() {
     global $pdo;
     try {
@@ -156,6 +157,8 @@ WHERE DATE(opening_time) = CURDATE() AND closing_time IS NULL");
     }
 }
 
+/* given a username, returns a boolean indicating if the username already exists
+in the database */
 function sqlUsernameExists($username) {
     global $pdo;
     try {
@@ -175,6 +178,8 @@ function sqlUsernameExists($username) {
 /******************* index *********************/
 
 /**************** voting table *****************/
+/* given a restaurant id, returns current number of votes for the restaurant
+for the day */
 function sqlGetNumVotes($restaurant_id) {
     global $pdo;
     try {
@@ -189,6 +194,7 @@ AND restaurant_id = $restaurant_id");
     }
 }
 
+/* returns current number of users in the database table */
 function sqlGetNumUsers() {
     global $pdo;
     try {
@@ -201,6 +207,10 @@ function sqlGetNumUsers() {
     }
 }
 
+/* given a user id and restaurant id, either returns a messages saying that the
+user has already voted today, or records the user's vote and returns a success
+message for the user, and picks a cute picture to set as the session display
+picture */
 function sqlSendVote($user_id, $restaurant_id) {
     global $pdo;
     try {
@@ -222,6 +232,7 @@ function sqlSendVote($user_id, $restaurant_id) {
     }
 }
 
+/* given an order id, deletes the order from the orders database*/
 function sqlDeleteOrder($order_id) {
     global $pdo;
     try {
@@ -234,6 +245,8 @@ function sqlDeleteOrder($order_id) {
 }
 
 /******************* ordering ******************/
+/* given a user id, string order, and restaurant id, creates a new order for
+the user */
 function sqlSendOrder($order, $user_id, $restaurant_id) {
     global $pdo;
     try {
@@ -246,6 +259,9 @@ function sqlSendOrder($order, $user_id, $restaurant_id) {
     }
 }
 
+/* returns information about all orders for today, including the order text,
+creation time, username, restaurant name, and rejection id of the order if it
+has been rejected and not yet accepted today */
 function sqlFetchOrders() {
     global $pdo;
     try {
@@ -253,7 +269,7 @@ function sqlFetchOrders() {
                     restaurants.name, order_rejects.id AS rejection_id
         FROM orders INNER JOIN users ON orders.user_id = users.id
         INNER JOIN restaurants ON orders.restaurant_id = restaurants.id
-        LEFT JOIN order_rejects ON orders.id = order_rejects.order_id
+        LEFT JOIN order_rejects ON orders.id = order_rejects.order_id AND order_rejects.accepted=FALSE
         WHERE DATE(creation_date) = CURDATE() ORDER BY creation_date DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -263,16 +279,21 @@ function sqlFetchOrders() {
     }
 }
 
+/* returns today's rejected orders for the given user id, including the text of
+the rejected order, restaurant name, the rejection message, and the username of
+the one who rejected the order */
 function sqlGetRejectedOrdersFor($user_id) {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT orders.text, restaurants.name,
+        $stmt = $pdo->prepare("SELECT order_rejects.id AS rejection_id,
+                      orders.text, restaurants.name,
                       order_rejects.reject_message, users.username
         FROM order_rejects
         INNER JOIN orders ON order_rejects.order_id = orders.id
         INNER JOIN restaurants ON orders.restaurant_id = restaurants.id
         INNER JOIN users ON order_rejects.rejector_user_id = users.id
-        WHERE DATE(creation_date) = CURDATE() AND orders.user_id=?");
+        WHERE DATE(creation_date) = CURDATE() AND orders.user_id=?
+        AND order_rejects.accepted=FALSE");
         $stmt->execute(array($user_id));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -281,16 +302,22 @@ function sqlGetRejectedOrdersFor($user_id) {
     }
 }
 
+/* returns orders rejected by the given user id today, which have been changed
+but not accepted yet. Includes the rejection message, and information about the
+rejected order, including username of the user who made the order, restaurant
+name, and text of the order */
 function sqlGetRejectedChanges($user_id) {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT order_rejects.reject_message, orders.*,
-        users.username, restaurants.name AS restaurant_name
+        $stmt = $pdo->prepare("SELECT order_rejects.id AS rejection_id,
+        order_rejects.reject_message, orders.text, users.username,
+        restaurants.name AS restaurant_name
         FROM order_rejects
         INNER JOIN orders ON order_rejects.order_id = orders.id
         INNER JOIN users ON users.id = orders.user_id
         INNER JOIN restaurants ON restaurants.id = orders.restaurant_id
-        WHERE rejector_user_id=? AND order_edited=TRUE AND accepted=FALSE");
+        WHERE DATE(creation_date) = CURDATE() AND rejector_user_id=?
+        AND order_edited=TRUE AND accepted=FALSE");
         $stmt->execute(array($user_id));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -299,6 +326,8 @@ function sqlGetRejectedChanges($user_id) {
     }
 }
 
+/* updates database with given edited order for the given order id; also notes
+that the order has been changed for rejected orders. */
 function sqlChangeOrder($order_id, $edited_order, $rejection_id) {
     global $pdo;
     try {
@@ -314,6 +343,8 @@ function sqlChangeOrder($order_id, $edited_order, $rejection_id) {
     }
 }
 
+/* rejects order with given order id, saving the rejection message and the user
+id of the one who rejected the order */
 function sqlRejectOrder($order_id, $reject_message, $rejector_id) {
     global $pdo;
     try {
@@ -326,6 +357,7 @@ function sqlRejectOrder($order_id, $reject_message, $rejector_id) {
     }
 }
 
+/* accepts the rejected order with the given rejection id */
 function sqlAcceptOrder($rejection_id) {
     global $pdo;
     try {

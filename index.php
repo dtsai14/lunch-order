@@ -14,62 +14,59 @@ include_once './mysql.php';
 <div class="container">
     <?php include "./header/header.php";
     ?>
-    <div>
+    <div id="voting-container">
+        <span id="vote-alert"></span>
+        <h3>Which restaurant would you like the office to order from today?</h3>
+        <form id="voting-form" role="form">
+            <table id="voting" class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 5%">Vote</th>
+                    <th style="width: 20%">Restaurant Name</th>
+                    <th>Current Votes</th>
+                </tr>
+                </thead>
+                <tbody id="vote-table">
+                </tbody>
+            </table>
+            <button id="send-vote" type="submit" class="btn btn-default">Vote</button>
+            <br><br>
+        </form>
+    </div>
+
+    <div id="ordering-container">
+        <!--<div class="alert alert-dismissable alert-info">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Voting has closed for today!</strong> Please vote again tomorrow :)
+            </div> -->
         <div>
             <h2>Today</h2>
-            <div id="restaurant-alerts"></div>
-            <div id="reject-alerts"></div>
-            <div id="admin-alerts"></div>
-        </div>
-    </div>
-    <div>
-        <div id="voting-container">
+
             <div id="orders-closed-alert"></div>
-            <span id="vote-alert"></span>
-            <h3>Which restaurant would you like the office to order from today?</h3>
-            <form id="voting-form" role="form">
-                <table id="voting" class="table table-bordered table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th style="width: 5%">Vote</th>
-                        <th style="width: 20%">Restaurant Name</th>
-                        <th>Current Votes</th>
-                    </tr>
-                    </thead>
-                    <tbody id="vote-table">
-                    </tbody>
-                </table>
-                <button id="send-vote" type="submit" class="btn btn-default">Vote</button>
-                <br><br>
-            </form>
+            <div id="restaurant-alerts"></div>
         </div>
+        <br>
 
-        <div id="ordering-container">
-            <!--<div class="alert alert-dismissable alert-info">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <strong>Voting has closed for today!</strong> Please vote again tomorrow :)
-        </div> -->
+        <h2>Place your order:</h2>
 
+        <form role="form" id="order-form">
+            <div class="form-group">
+                <label for="restaurant">Restaurant</label>
+                <select id="restaurant-dropdown" class="form-control" required>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="order">Order</label>
+                <textarea name="order" class="form-control" id="order" maxlength="1000" cols="20" rows="6"
+                          required></textarea>
+            </div>
+            <button id="send-order" class="btn btn-primary">Submit</button>
+        </form>
 
-            <br>
-            <form role="form" id="order-form">
-                <div class="form-group">
-                    <label for="restaurant">Restaurant</label>
-                    <select id="restaurant-dropdown" class="form-control" required>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="order">Order</label>
-                    <textarea name="order" class="form-control" id="order" maxlength="1000" cols="20" rows="6"
-                              required></textarea>
-                </div>
-                <button id="send-order" class="btn btn-primary">Submit</button>
-            </form>
+        <br><br>
 
-            <br><br>
-            <h2>Orders <span class="pull-right"><small><?= date('l, F d, Y') ?></small></span></h2>
-            <div id="order-list"></div>
-        </div>
+        <h2>Orders <span class="pull-right"><small><?= date('l, F d, Y') ?></small></span></h2>
+        <div id="order-list"></div>
     </div>
 </div>
 
@@ -178,31 +175,7 @@ include_once './mysql.php';
     </div>
 </script>
 
-<script id="reject-alerts-template" type="text/x-handlebars-template">
-    {{#each rejectedOrders}}
-    <div class="alert alert-info">
-        {{admin}} just sent back your order for {{restaurant_name}}
-        <br>
-        <strong>Message:</strong> "{{message}}"
-    </div>
-    {{/each}}
-</script>
 
-
-<script id="admin-alerts-template" type="text/x-handlebars-template">
-
-    <div class="panel panel-info">
-        <div class="panel-body">
-            Admin Alerts:
-    {{#each changedRejections}}
-
-        {{username}} has made changes to his/her order for {{restaurant_name}}.
-        <br>
-        Please review the order and accept it.
-    {{/each}}
-    </div>
-    </div>
-</script>
 
 <script src="./js/index.js"></script>
 </body>

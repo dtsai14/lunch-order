@@ -35,7 +35,7 @@ include_once 'authenticate.php';
 
 <script id="pic-opt-template" type="text/x-handlebars-template">
     <a class="pull-left" href="http://thatssogloss.com/looking-at-cute-animals-improves-productivity/" target="_blank">
-        <img class="media-object img-thumbnail" src="{{display_pic}}" alt="cute pic" style="max-height: 100%; max-width: 100%">
+        <img class="media-object img-thumbnail" src="{{display_pic}}" alt="cute pic" style="max-height: 90px; max-width: 100%">
     </a>
 </script>
 <script src="./js/header.js"></script>

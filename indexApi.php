@@ -58,25 +58,39 @@ function refreshOrders() {
     return json_encode(array('orders' => $json_orders));
 };
 
+/* returns a JSON array containing information about orders the user made which
+were rejected */
 function getRejectedOrders() {
     $user_id = $_SESSION['user_id'];
     $json_rejected_orders = array();
+    $json_rejection_ids = array();
     foreach (sqlGetRejectedOrdersFor($user_id) as $rejectedOrder) {
-        $json_rejected_orders[] = array('admin' => $rejectedOrder['username'],
+        $json_rejected_orders[$rejectedOrder['rejection_id']] = array('admin' => $rejectedOrder['username'],
             'restaurant_name' => $rejectedOrder['name'],
-            'text' => $rejectedOrder['text'], 'message' => $rejectedOrder['reject_message']);
+            'text' => $rejectedOrder['text'],
+            'message' => $rejectedOrder['reject_message']);
+        $json_rejection_ids[] = $rejectedOrder['rejection_id'];
     };
-    return json_encode(array('rejectedOrders' => $json_rejected_orders));
+    return json_encode(array('rejectedOrders' => $json_rejected_orders, 'rejectionIds' => $json_rejection_ids));
 };
 
+/* returns a JSON array containing two arrays: one with information about the
+orders the current user rejected which have been changed, including the username
+of the orderer, restaurant name, rejection message, and current order; one
+containing the rejection ids of these orders. */
 function checkRejectedChanges() {
     $user_id = $_SESSION['user_id'];
     $json_changed_rejections = array();
+    $json_rejection_ids = array();
     foreach (sqlGetRejectedChanges($user_id) as $changedRejectedOrder) {
-        $json_changed_rejections[] = array('username' => $changedRejectedOrder['username'],
-            'restaurant_name' => $changedRejectedOrder['restaurant_name']);
+        $json_changed_rejections[$changedRejectedOrder['rejection_id']] = array('username' => $changedRejectedOrder['username'],
+            'restaurant_name' => $changedRejectedOrder['restaurant_name'],
+            'reject_message' => $changedRejectedOrder['reject_message'],
+            'order' => $changedRejectedOrder['text']);
+        $json_rejection_ids[] = $changedRejectedOrder['rejection_id'];
     };
-    return json_encode(array('changedRejections' => $json_changed_rejections));
+    return json_encode(array('changedRejections' => $json_changed_rejections,
+        'rejectionIds' => $json_rejection_ids));
 }
 
 /* sends user's order for given restaurant, with given text order */

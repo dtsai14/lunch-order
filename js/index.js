@@ -8,7 +8,9 @@ function afterThePageLoads() {
     var intervalId;
     var activeRestaurantsData = {};
     var ordersData = {};
-    var rejectionData = "";
+    var rejectionData = {};
+    var rejectedOrderNotifications = {};
+    var changedOrderNotifications = {};
     checkSwap();
 
     /* check to see if the ordering form needs to be swapped our for the voting
@@ -174,12 +176,40 @@ function afterThePageLoads() {
             data: {'cmd': 'getRejectedOrders'},
             success: function (data) {
                 data = JSON.parse(data);
-                if (!_.isEqual(data, rejectionData)) {
-                    var source = $('#reject-alerts-template').html();
-                    var template = Handlebars.compile(source);
-                    var html = template(data);
-                    $('#reject-alerts').html(html);
-                    rejectionData = data;
+                console.log("just checked rejection!");
+                console.log(rejectionData);
+                console.log(data['rejectionIds']);
+                if (!_.isEqual(data['rejectionIds'], _.keys(rejectedOrderNotifications))) {
+                    var acceptedRejectionIds = _.difference(_.keys(rejectedOrderNotifications), data['rejectionIds']);
+                    var newRejectionIds = _.difference(data['rejectionIds'], _.keys(rejectedOrderNotifications));
+                    var rejectedOrders = data['rejectedOrders'];
+                    acceptedRejectionIds.forEach(function (element, index, array) {
+                        rejectedOrderNotifications[element].pnotify_remove();
+                        delete rejectedOrderNotifications[element];
+                    });
+                    newRejectionIds.forEach(function (element, index, array) {
+                        var rejection = rejectedOrders[element];
+                        var notice = $.pnotify({
+                            title: 'Notice',
+                            text: "<strong>" + rejection['admin'] + "</strong> just sent back your order for <strong>" + rejection['restaurant_name']
+                                + "</strong><br><strong>Your Order:</strong><br> " + rejection['text'] + "<br><strong>Message:</strong><br> " + rejection['message'],
+                            type: 'error',
+                            nonblock: true,
+                            hide: false,
+                            /*before_close: function (pnotify) {
+                                pnotify.pnotify({
+                                    title: 'Order Accepted!',
+                                    text: "<strong>" + rejection['admin'] + "</strong> has accepted your order for <strong>" + rejection['restaurant_name'] + "</strong>!",
+                                    type: 'success',
+                                    before_close: null
+                                });
+                                pnotify.pnotify_queue_remove();
+                                //pnotify.effect('bounce');
+                                return false;
+                            }*/
+                        });
+                        rejectedOrderNotifications[element] = notice;
+                    });
                 }
             }
         })
@@ -192,10 +222,28 @@ function afterThePageLoads() {
             data: {'cmd': 'checkRejectedChanges'},
             success: function (data) {
                 data = JSON.parse(data);
-                var source = $('#admin-alerts-template').html();
-                var template = Handlebars.compile(source);
-                var html = template(data);
-                $('#admin-alerts').html(html);
+                if (!_.isEqual(data['rejectionIds'], _.keys(changedOrderNotifications))) {
+                    var acceptedChangeIds = _.difference(_.keys(changedOrderNotifications), data['rejectionIds']);
+                    var newChangeIds = _.difference(data['rejectionIds'], _.keys(changedOrderNotifications));
+                    var changedOrders = data['changedRejections'];
+                    acceptedChangeIds.forEach(function (element, index, array) {
+                        changedOrderNotifications[element].pnotify_remove();
+                        delete changedOrderNotifications[element];
+                    });
+                    newChangeIds.forEach(function (element, index, array) {
+                        var changedOrder = changedOrders[element];
+                        var notice = $.pnotify({
+                            title: 'Notice',
+                            text: "<strong>" + changedOrder['username'] + "</strong> has made changes to his/her order for <strong>" + changedOrder['restaurant_name']
+                                + "</strong><br>Please review the order and accept it",
+                            nonblock: true,
+                            hide: false,
+                            closer: false,
+                            sticker: false
+                        });
+                        changedOrderNotifications[element] = notice;
+                    });
+                }
             }
         })
     }
@@ -245,8 +293,8 @@ function afterThePageLoads() {
             var rejectMessage = $('#' + orderId + ' textarea.reject-message').val();
             $('#' + orderId + ' .reject-panel').hide();
             $('#' + orderId + ' .accept-order-button').show();
-            $('#' + orderId + ' .panel').removeClass('panel-default');
-            $('#' + orderId + ' .panel').addClass('panel-warning');
+            $('#' + orderId).removeClass('panel-default');
+            $('#' + orderId).addClass('panel-warning');
             console.log("changed color!");
 
             $.ajax({
@@ -261,9 +309,9 @@ function afterThePageLoads() {
             var orderId = $(this).data('order-id');
             $(this).hide();
             $('#' + orderId + ' .reject-order-button').show();
-            var rejectionId = $('#' + orderId + ' .panel').data('rejection-id');
-            $('#' + orderId + ' .panel').removeClass('panel-warning');
-            $('#' + orderId + ' .panel').addClass('panel-default');
+            var rejectionId = $('#' + orderId).data('rejection-id');
+            $('#' + orderId).removeClass('panel-warning');
+            $('#' + orderId).addClass('panel-default');
             $.ajax({
                 url: './api.php',
                 type: 'POST',
@@ -316,11 +364,11 @@ function afterThePageLoads() {
         });
 
         /* any changes user has made to order are saved to database */
-        $('.save-changes-button').click(function() {
+        $('.save-changes-button').click(function () {
             var orderId = $(this).data('order-id');
             var originalOrder = $('#' + orderId + ' .order-text').text();
             var editedOrder = $('#' + orderId + ' .form-control').val();
-            var rejectionId = $('#' + orderId + ' .panel').data('rejection_id');
+            var rejectionId = $('#' + orderId).data('rejection-id');
             $('#' + orderId + ' .order-text').text(editedOrder);
             $('#' + orderId + ' .edit-panel').hide();
             $('#' + orderId + ' .order-panel').show();
