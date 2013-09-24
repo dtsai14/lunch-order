@@ -15,6 +15,7 @@ include_once './mysql.php';
     <?php include "./header/header.php";
     ?>
     <div id="voting-container">
+        <div id="orders-closed-alert"></div>
         <span id="vote-alert"></span>
         <h3>Which restaurant would you like the office to order from today?</h3>
         <form id="voting-form" role="form">
@@ -42,13 +43,11 @@ include_once './mysql.php';
         <div>
             <h2>Today</h2>
 
-            <div id="orders-closed-alert"></div>
             <div id="restaurant-alerts"></div>
         </div>
         <br>
 
         <h2>Place your order:</h2>
-
         <form role="form" id="order-form">
             <div class="form-group">
                 <label for="restaurant">Restaurant</label>

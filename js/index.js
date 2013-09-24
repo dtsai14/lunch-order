@@ -124,14 +124,17 @@ function afterThePageLoads() {
     /* when order form is submitted, order is sent to database, and order
     * list is refreshed */
     $('#order-form').submit(function () {
+        $('#send-order').attr('disabled', true);
+
         $.ajax({
                 url: './api.php',
                 type: 'POST',
                 data: {'cmd': 'sendOrder', 'restaurant_id': $('#restaurant-dropdown').val(),
                     'order': $('#order').val()},
                 success: function () {
-                    $('#order').val('');
                     refreshOrders();
+                    $('#send-order').attr('disabled', false);
+                    $('#order').val('');
                 }
             });
         return false;
