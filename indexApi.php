@@ -9,15 +9,16 @@ function sendVote() {
     $restaurant_id = $_POST['restaurant_id'];
     $voteAlert = sqlSendVote($user_id, $restaurant_id);
     return json_encode(array('voteAlert' => $voteAlert));
-}
+};
 
 /* returns JSON array containing data about restaurants which are currently open,
 including restaurant id, name, menu url, and the username of user who opened it */
 function getActiveRestaurants() {
     $json_active_restaurants = array();
     foreach (sqlGetActiveRestaurants() as $restaurant) {
-        $json_active_restaurant = array('id' => $restaurant['restaurant_id'],
-            'name' => $restaurant['name'], 'menu_url' => $restaurant['menu_url'],
+        $json_active_restaurant = array('open_restaurant_id' => $restaurant['id'],
+            'id' => $restaurant['restaurant_id'], 'name' => $restaurant['name'],
+            'menu_url' => $restaurant['menu_url'],
             'username' => $restaurant['username']);
         $json_active_restaurants[] = $json_active_restaurant;
     };
@@ -42,15 +43,20 @@ function refreshOrders() {
             $auth_reject = "false";
         } else {
             $auth_edit = "false";
-            $auth_reject = "false";
-            foreach (sqlGetRestaurantsOpenedBy($_SESSION['user_id']) as $restaurant) {
+            //$auth_reject = "false";
+            if ($order['restaurant_opener_id'] == $_SESSION['user_id']) {
+                $auth_reject = "true";
+            } else {
+                $auth_reject = "false";
+            }
+            /*foreach (sqlGetRestaurantsOpenedBy($_SESSION['user_id']) as $restaurant) {
                 if ($restaurant['restaurant_id'] == $order['restaurant_id']) {
                     $auth_reject = "true";
                 }
-            }
+            }*/
         }
         $json_orders[] = array('username' => $order['username'],
-            'restaurant_name' => $order['name'], 'text' => $order['text'],
+            'restaurant_name' => $order['restaurant_name'], 'text' => $order['text'],
             'creation_time' => date("g:i a", strtotime($order['creation_date'])),
             'auth_edit' => $auth_edit, 'auth_reject' => $auth_reject,
             'order_id' => $order['id'], 'rejection_id' => $order['rejection_id']);
@@ -96,8 +102,8 @@ function checkRejectedChanges() {
 /* sends user's order for given restaurant, with given text order */
 function sendOrder() {
     $order = $_POST['order'];
-    $restaurant_id = $_POST['restaurant_id'];
-    sqlSendOrder($order, $_SESSION['user_id'], $restaurant_id);
+    $open_restaurant_id = $_POST['open_restaurant_id'];
+    sqlSendOrder($order, $_SESSION['user_id'], $open_restaurant_id);
 };
 
 /* delete order with given order id */

@@ -129,7 +129,7 @@ function afterThePageLoads() {
         $.ajax({
                 url: './api.php',
                 type: 'POST',
-                data: {'cmd': 'sendOrder', 'restaurant_id': $('#restaurant-dropdown').val(),
+                data: {'cmd': 'sendOrder', 'open_restaurant_id': $('#restaurant-dropdown').val(),
                     'order': $('#order').val()},
                 success: function () {
                     refreshOrders();

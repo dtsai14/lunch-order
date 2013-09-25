@@ -108,7 +108,7 @@ include_once './mysql.php';
 
 <script id="restaurant-dropdown-template" type="text/x-handlebars-template">
     {{#activeRestaurants}}
-        <option value="{{id}}">{{name}}</option>
+        <option value="{{open_restaurant_id}}">{{name}}</option>
     {{/activeRestaurants}}
 </script>
 

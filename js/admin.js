@@ -20,6 +20,7 @@ function afterThePageLoads() {
             data: {'cmd': 'getTakenOrders'},
             success: function(data) {
                 data = JSON.parse(data);
+                console.log(data);
                 if (!_.isEqual(data,takenOrdersData)) {
                     var source = $('#taken-orders-template').html();
                     var template = Handlebars.compile(source);

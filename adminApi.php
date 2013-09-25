@@ -46,9 +46,9 @@ function addPhone() {
     sqlAddPhone($restaurant_id, $phone);
 }
 
-/* returns JSON array containing data about orders from restaurants this user
+/* NOT USING ANYMORE returns JSON array containing data about orders from restaurants this user
 opened today, leaving out restaurants for which no one placed orders */
-function getTakenOrders() {
+function exGetTakenOrders() {
     $json_taken_orders = array();
     foreach (sqlGetRestaurantsClosedBy($_SESSION['user_id']) as $restaurant) {
         $orders = sqlGetOrdersForRestaurant($restaurant['restaurant_id']);
@@ -64,6 +64,25 @@ function getTakenOrders() {
             $json_taken_orders[] = $json_taken_order;
         }
     };
+    return json_encode(array("takenOrders" => $json_taken_orders));
+}
+
+function getTakenOrders() {
+    $json_taken_orders = array();
+    foreach (sqlGetSessionsOpenedBy($_SESSION['user_id']) as $open_session) {
+        $orders = sqlGetOrdersForSession($open_session['id']);
+        if (!empty($orders)) {
+            $orders_array = array();
+            foreach ($orders as $order) {
+                $order_object = array("first_name" => $order['first_name'],
+                    "last_name" => $order['last_name'], "text" => $order['text']);
+                $orders_array[] = $order_object;
+            }
+            $json_taken_order = array("id" => $open_session['restaurant_id'],
+                "name" => $open_session['restaurant_name'], "orders" => $orders_array);
+            $json_taken_orders[] = $json_taken_order;
+        }
+    }
     return json_encode(array("takenOrders" => $json_taken_orders));
 }
 
